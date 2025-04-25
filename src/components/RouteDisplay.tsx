@@ -13,6 +13,7 @@ interface RouteDisplayProps {
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
   const [apiKey, setApiKey] = useState<string>('');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     // Load the API key from environment variables
@@ -41,50 +42,15 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
     setSelectedPlace(place);
   };
 
+    const handleShowMap = () => {
+        setShowMap(true);
+    };
+
   return (
     <Card className="w-full">
       <CardContent className="grid gap-4">
         <h2 className="text-lg font-semibold">Отображение Маршрута</h2>
-        {apiKey ? (
-          <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-              mapContainerStyle={mapStyles}
-              zoom={12}
-              center={places.length > 0 ? places[0].location : defaultCenter}
-            >
-              {places.map((place, index) => (
-                <Marker
-                  key={index}
-                  position={place.location}
-                  title={place.name}
-                  onClick={() => handleMarkerClick(place)}
-                />
-              ))}
-                {selectedPlace && (
-                    <InfoWindow
-                        position={selectedPlace.location}
-                        onCloseClick={() => setSelectedPlace(null)}
-                    >
-                        <div>
-                            <h3>{selectedPlace.name}</h3>
-                            <p>{selectedPlace.description}</p>
-                            <p>Категория: {selectedPlace.category}</p>
-                            {selectedPlace.dateFounded && <p>Дата основания: {selectedPlace.dateFounded}</p>}
-                            {selectedPlace.averagePrice && <p>Средняя цена: {selectedPlace.averagePrice}</p>}
-                            {selectedPlace.rating && <p>Рейтинг: {selectedPlace.rating}</p>}
-                        </div>
-                    </InfoWindow>
-                )}
-            </GoogleMap>
-          </LoadScript>
-        ) : (
-          <div className="h-64 w-full bg-secondary rounded-md flex items-center justify-center">
-            <MapPin className="h-9 w-9 text-muted-foreground" />
-            <span className="text-muted-foreground">
-              Карта: API ключ Google Maps не найден.
-            </span>
-          </div>
-        )}
+
         <div>
           <h3>Выбранные Места:</h3>
           {places.length > 0 ? (
@@ -95,6 +61,13 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                   {place.dateFounded && ` - Дата основания: ${place.dateFounded}`}
                   {place.averagePrice && ` - Средняя цена: ${place.averagePrice}`}
                   {place.rating && ` - Рейтинг: ${place.rating}`}
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${place.location.lat},${place.location.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Посмотреть на карте
+                  </a>
                 </li>
               ))}
             </ul>
@@ -102,6 +75,39 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
             <p className="text-muted-foreground">Места еще не выбраны.</p>
           )}
         </div>
+              {apiKey && showMap && (
+                  <LoadScript googleMapsApiKey={apiKey}>
+                      <GoogleMap
+                          mapContainerStyle={mapStyles}
+                          zoom={12}
+                          center={places.length > 0 ? places[0].location : defaultCenter}
+                      >
+                          {places.map((place, index) => (
+                              <Marker
+                                  key={index}
+                                  position={place.location}
+                                  title={place.name}
+                                  onClick={() => handleMarkerClick(place)}
+                              />
+                          ))}
+                          {selectedPlace && (
+                              <InfoWindow
+                                  position={selectedPlace.location}
+                                  onCloseClick={() => setSelectedPlace(null)}
+                              >
+                                  <div>
+                                      <h3>{selectedPlace.name}</h3>
+                                      <p>{selectedPlace.description}</p>
+                                      <p>Категория: {selectedPlace.category}</p>
+                                      {selectedPlace.dateFounded && <p>Дата основания: {selectedPlace.dateFounded}</p>}
+                                      {selectedPlace.averagePrice && <p>Средняя цена: {selectedPlace.averagePrice}</p>}
+                                      {selectedPlace.rating && <p>Рейтинг: {selectedPlace.rating}</p>}
+                                  </div>
+                              </InfoWindow>
+                          )}
+                      </GoogleMap>
+                  </LoadScript>
+              ) }
       </CardContent>
     </Card>
   );
