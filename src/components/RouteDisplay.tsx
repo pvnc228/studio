@@ -11,15 +11,13 @@ interface RouteDisplayProps {
 }
 
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
-  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState<string>(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   useEffect(() => {
     // Load the API key from environment variables
     const loadApiKey = () => {
-      if (process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
-        setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
-      } else {
+      if (!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
         console.error("Google Maps API key not found in environment variables.");
       }
     };
@@ -41,24 +39,11 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
     setSelectedPlace(place);
   };
 
-  if (!apiKey) {
-    return (
-      <Card className="w-full">
-        <CardContent className="grid gap-4">
-          <h2 className="text-lg font-semibold">Отображение Маршрута</h2>
-          <p className="text-muted-foreground">
-            Не удалось загрузить API ключ Google Maps.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className="w-full">
       <CardContent className="grid gap-4">
         <h2 className="text-lg font-semibold">Отображение Маршрута</h2>
-        {places.length > 0 ? (
+        {apiKey ? (
           <LoadScript googleMapsApiKey={apiKey}>
             <GoogleMap
               mapContainerStyle={mapStyles}
@@ -82,6 +67,9 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                             <h3>{selectedPlace.name}</h3>
                             <p>{selectedPlace.description}</p>
                             <p>Категория: {selectedPlace.category}</p>
+                            {selectedPlace.dateFounded && <p>Дата основания: {selectedPlace.dateFounded}</p>}
+                            {selectedPlace.averagePrice && <p>Средняя цена: {selectedPlace.averagePrice}</p>}
+                            {selectedPlace.rating && <p>Рейтинг: {selectedPlace.rating}</p>}
                         </div>
                     </InfoWindow>
                 )}
@@ -91,7 +79,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
           <div className="h-64 w-full bg-secondary rounded-md flex items-center justify-center">
             <MapPin className="h-9 w-9 text-muted-foreground" />
             <span className="text-muted-foreground">
-              Карта: Места не выбраны
+              Карта: API ключ Google Maps не найден.
             </span>
           </div>
         )}
@@ -102,6 +90,9 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
               {places.map((place) => (
                 <li key={place.name}>
                   {place.name} ({place.category}) - {place.description}
+                  {place.dateFounded && ` - Дата основания: ${place.dateFounded}`}
+                  {place.averagePrice && ` - Средняя цена: ${place.averagePrice}`}
+                  {place.rating && ` - Рейтинг: ${place.rating}`}
                 </li>
               ))}
             </ul>
