@@ -5,19 +5,20 @@ import { MapPin } from "lucide-react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
 import { Place } from "@/services/places";
+import nextConfig from '../../next.config';
 
 interface RouteDisplayProps {
   places: Place[];
 }
 
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
-  const [apiKey, setApiKey] = useState<string>(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '');
+  const [apiKey, setApiKey] = useState<string>(nextConfig.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   useEffect(() => {
     // Load the API key from environment variables
     const loadApiKey = () => {
-      if (!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+      if (!nextConfig.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
         console.error("Google Maps API key not found in environment variables.");
       }
     };
