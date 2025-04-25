@@ -28,7 +28,7 @@ export default function Home() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Tabs defaultvalue="manual">
+          <Tabs defaultValue="manual">
             <TabsList>
               <TabsTrigger value="manual">Ручной Подбор</TabsTrigger>
               <TabsTrigger value="ai">AI Подбор</TabsTrigger>
@@ -46,3 +46,4 @@ export default function Home() {
     </div>
   );
 }
+
