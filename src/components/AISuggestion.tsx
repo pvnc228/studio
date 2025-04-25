@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { suggestPlace } from "@/ai/flows/AISuggestionFlow";
+import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
 import { Place } from "@/services/places";
 
 export const AISuggestion = () => {
@@ -22,50 +22,50 @@ export const AISuggestion = () => {
   const [suggestedPlaces, setSuggestedPlaces] = useState<Place[]>([]);
 
   const cities = [
-    'Moscow',
-    'St. Petersburg',
-    'Suzdal',
-    'Vladimir',
-    'Yaroslavl',
-    'Kostroma',
-    'Rostov Veliky',
-    'Sergiev Posad'
+    'Москва',
+    'Санкт-Петербург',
+    'Суздаль',
+    'Владимир',
+    'Ярославль',
+    'Кострома',
+    'Ростов Великий',
+    'Сергиев Посад'
   ];
 
   const categories = [
-    'Restaurant',
-    'Cafe',
-    'Bar',
-    'Movie Theater',
-    'Theater',
-    'Hotel',
-    'Park',
+    'Ресторан',
+    'Кафе',
+    'Бар',
+    'Кинотеатр',
+    'Театр',
+    'Отель',
+    'Парк',
   ];
 
   const handleSuggestion = async () => {
     if (!city || !description || !category) {
-      alert('Please select a city, enter a description, and select a category.');
+      alert('Пожалуйста, выберите город, введите описание и выберите категорию.');
       return;
     }
 
     try {
-      const places = await suggestPlace({ city: city.toLowerCase(), description, category: category.toLowerCase() });
+      const places = await suggestPlaceFromDescription({ city: city.toLowerCase(), description, category: category.toLowerCase() });
       setSuggestedPlaces(places);
     } catch (error) {
-      console.error("Error suggesting places:", error);
-      alert('Failed to get place suggestions. Please try again.');
+      console.error("Ошибка при предложении мест:", error);
+      alert('Не удалось получить предложения мест. Пожалуйста, попробуйте еще раз.');
     }
   };
 
   return (
     <Card className="w-full">
       <CardContent className="grid gap-4">
-        <h2 className="text-lg font-semibold">AI Place Suggestion</h2>
+        <h2 className="text-lg font-semibold">AI Подбор Мест</h2>
 
-        <Label htmlFor="city">City</Label>
+        <Label htmlFor="city">Город</Label>
         <Select onValueChange={setCity}>
           <SelectTrigger id="city">
-            <SelectValue placeholder="Select a city" />
+            <SelectValue placeholder="Выберите город" />
           </SelectTrigger>
           <SelectContent>
             {cities.map((ct) => (
@@ -76,10 +76,10 @@ export const AISuggestion = () => {
           </SelectContent>
         </Select>
 
-        <Label htmlFor="category">Category</Label>
+        <Label htmlFor="category">Категория</Label>
         <Select onValueChange={setCategory}>
           <SelectTrigger id="category">
-            <SelectValue placeholder="Select a category" />
+            <SelectValue placeholder="Выберите категорию" />
           </SelectTrigger>
           <SelectContent>
             {categories.map((cat) => (
@@ -90,19 +90,19 @@ export const AISuggestion = () => {
           </SelectContent>
         </Select>
 
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Описание</Label>
         <Input
           id="description"
-          placeholder="Describe the place you're looking for"
+          placeholder="Опишите место, которое вы ищете"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <Button onClick={handleSuggestion}>Suggest Places</Button>
+        <Button onClick={handleSuggestion}>Предложить Места</Button>
 
         {suggestedPlaces.length > 0 && (
           <div className="mt-4">
-            <h3>Suggested Places:</h3>
+            <h3>Предложенные Места:</h3>
             <ul>
               {suggestedPlaces.map((place) => (
                 <li key={place.name}>
@@ -116,5 +116,3 @@ export const AISuggestion = () => {
     </Card>
   );
 };
-
-    

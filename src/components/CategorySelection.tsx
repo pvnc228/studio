@@ -9,22 +9,22 @@ export const CategorySelection = () => {
   const [category, setCategory] = useState('');
 
   const categories = [
-    'Restaurant',
-    'Cafe',
-    'Bar',
-    'Movie Theater',
-    'Theater',
-    'Hotel',
-    'Park',
+    'Ресторан',
+    'Кафе',
+    'Бар',
+    'Кинотеатр',
+    'Театр',
+    'Отель',
+    'Парк',
   ];
 
   return (
     <Card className="w-full">
       <CardContent>
-        <Label htmlFor="category">Select Category</Label>
+        <Label htmlFor="category">Выберите Категорию</Label>
         <Select onValueChange={setCategory}>
           <SelectTrigger id="category">
-            <SelectValue placeholder="Select a category" />
+            <SelectValue placeholder="Выберите категорию" />
           </SelectTrigger>
           <SelectContent>
             {categories.map((cat) => (
@@ -34,10 +34,8 @@ export const CategorySelection = () => {
             ))}
           </SelectContent>
         </Select>
-        {category && <p className="mt-2">Selected category: {category}</p>}
+        {category && <p className="mt-2">Выбранная категория: {category}</p>}
       </CardContent>
     </Card>
   );
 };
-
-    

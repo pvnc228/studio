@@ -9,23 +9,23 @@ export const CitySelection = () => {
   const [city, setCity] = useState('');
 
   const cities = [
-    'Moscow',
-    'St. Petersburg',
-    'Suzdal',
-    'Vladimir',
-    'Yaroslavl',
-    'Kostroma',
-    'Rostov Veliky',
-    'Sergiev Posad'
+    'Москва',
+    'Санкт-Петербург',
+    'Суздаль',
+    'Владимир',
+    'Ярославль',
+    'Кострома',
+    'Ростов Великий',
+    'Сергиев Посад'
   ];
 
   return (
     <Card className="w-full">
       <CardContent>
-        <Label htmlFor="city">Select City</Label>
+        <Label htmlFor="city">Выберите Город</Label>
         <Select onValueChange={setCity}>
           <SelectTrigger id="city">
-            <SelectValue placeholder="Select a city" />
+            <SelectValue placeholder="Выберите город" />
           </SelectTrigger>
           <SelectContent>
             {cities.map((ct) => (
@@ -35,10 +35,8 @@ export const CitySelection = () => {
             ))}
           </SelectContent>
         </Select>
-        {city && <p className="mt-2">Selected city: {city}</p>}
+        {city && <p className="mt-2">Выбранный город: {city}</p>}
       </CardContent>
     </Card>
   );
 };
-
-    

@@ -1,3 +1,4 @@
+"use client";
 
 import { CategorySelection } from '@/components/CategorySelection';
 import { CitySelection } from '@/components/CitySelection';
@@ -11,10 +12,10 @@ export default function Home() {
       <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl text-center">
-            ✨ RouteWise: Plan Your Perfect Trip ✨
+            ✨ RouteWise: Планируйте Своё Идеальное Путешествие ✨
           </CardTitle>
           <CardDescription className="text-center">
-            Discover personalized routes in Russia's most beautiful cities.
+            Откройте для себя персонализированные маршруты по самым красивым городам России.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -27,6 +28,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-    

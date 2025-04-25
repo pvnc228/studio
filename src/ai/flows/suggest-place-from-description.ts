@@ -67,20 +67,20 @@ const prompt = ai.definePrompt({
       imageUrl: z.string().describe('URL of an image for the place'),
     })).describe('A list of suggested places.'),
   },
-  prompt: `You are a helpful AI assistant that suggests places based on a user's description.
+  prompt: `Ты - полезный AI-помощник, который предлагает места на основе описания пользователя.
 
-The user is looking for a place in {{city}} with the following description: {{description}}.
-The category of the place is {{category}}.
+Пользователь ищет место в городе {{city}} со следующим описанием: {{description}}.
+Категория места - {{category}}.
 
-Here is a list of places in that city and category:
+Вот список мест в этом городе и категории:
 
 {{#each places}}
-- Name: {{name}}, Description: {{description}}
+- Название: {{name}}, Описание: {{description}}
 {{/each}}
 
-Based on the user's description, suggest the places that best match their needs.
+Основываясь на описании пользователя, предложите места, которые лучше всего соответствуют их потребностям.
 
-Return a JSON array of places that match the description.  Do not include any other text in your response.
+Верните JSON-массив мест, которые соответствуют описанию. Не включайте никакой другой текст в свой ответ.
 `,
 });
 
