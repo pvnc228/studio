@@ -2,7 +2,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
 import { Place } from "@/services/places";
 
@@ -10,23 +9,27 @@ interface RouteDisplayProps {
   places: Place[];
 }
 
+const StarRating = ({ rating }: { rating: number }) => {
+  const stars = Array.from({ length: 5 }, (_, index) => (
+    <span key={index} className={index < rating ? "text-yellow-500" : "text-gray-300"}>
+      ★
+    </span>
+  ));
+
+  return <>{stars}</>;
+};
+
+
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
-  const [apiKey, setApiKey] = useState<string>('');
+  const [apiKey] = useState<string>(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '');
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
-    // Load the API key from environment variables
-    const loadApiKey = () => {
-      if (process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
-        setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
-      } else {
-        console.error("Google Maps API key not found in environment variables.");
-      }
-    };
-
-    loadApiKey();
-  }, []);
+    if (!apiKey) {
+      console.error("Google Maps API key not found in environment variables.");
+    }
+  }, [apiKey]);
 
   const mapStyles = {
     height: '400px',
@@ -47,7 +50,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
     };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full shadow-md">
       <CardContent className="grid gap-4">
         <h2 className="text-lg font-semibold">Отображение Маршрута</h2>
 
@@ -56,15 +59,27 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
           {places.length > 0 ? (
             <ul>
               {places.map((place) => (
-                <li key={place.name}>
-                  {place.name} ({place.category}) - {place.description}
-                  {place.dateFounded && ` - Дата основания: ${place.dateFounded}`}
-                  {place.averagePrice && ` - Средняя цена: ${place.averagePrice}`}
-                  {place.rating && ` - Рейтинг: ${place.rating}`}
+                <li key={place.name} className="mb-4 p-4 border rounded-md">
+                  <div className="flex items-center mb-2">
+                    <img src={place.imageUrl} alt={place.name} className="w-20 h-20 object-cover rounded mr-4" />
+                    <div>
+                      <h4 className="text-lg font-semibold">{place.name}</h4>
+                      <p className="text-sm text-gray-500">{place.category}</p>
+                    </div>
+                  </div>
+                  <p>{place.description}</p>
+                  {place.dateFounded && <p>Дата основания: {place.dateFounded}</p>}
+                  {place.averagePrice && <p>Средняя цена: {place.averagePrice}</p>}
+                  {place.rating && (
+                    <div className="flex items-center">
+                      Рейтинг: <StarRating rating={place.rating} />
+                    </div>
+                  )}
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${place.location.lat},${place.location.lng}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
                   >
                     Посмотреть на карте
                   </a>
@@ -75,39 +90,6 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
             <p className="text-muted-foreground">Места еще не выбраны.</p>
           )}
         </div>
-              {apiKey && showMap && (
-                  <LoadScript googleMapsApiKey={apiKey}>
-                      <GoogleMap
-                          mapContainerStyle={mapStyles}
-                          zoom={12}
-                          center={places.length > 0 ? places[0].location : defaultCenter}
-                      >
-                          {places.map((place, index) => (
-                              <Marker
-                                  key={index}
-                                  position={place.location}
-                                  title={place.name}
-                                  onClick={() => handleMarkerClick(place)}
-                              />
-                          ))}
-                          {selectedPlace && (
-                              <InfoWindow
-                                  position={selectedPlace.location}
-                                  onCloseClick={() => setSelectedPlace(null)}
-                              >
-                                  <div>
-                                      <h3>{selectedPlace.name}</h3>
-                                      <p>{selectedPlace.description}</p>
-                                      <p>Категория: {selectedPlace.category}</p>
-                                      {selectedPlace.dateFounded && <p>Дата основания: {selectedPlace.dateFounded}</p>}
-                                      {selectedPlace.averagePrice && <p>Средняя цена: {selectedPlace.averagePrice}</p>}
-                                      {selectedPlace.rating && <p>Рейтинг: {selectedPlace.rating}</p>}
-                                  </div>
-                              </InfoWindow>
-                          )}
-                      </GoogleMap>
-                  </LoadScript>
-              ) }
       </CardContent>
     </Card>
   );
