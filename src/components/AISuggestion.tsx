@@ -14,8 +14,13 @@ import {
 } from "@/components/ui/select";
 import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
 import { Place } from "@/services/places";
+import { RouteDisplay } from "@/components/RouteDisplay";
 
-export const AISuggestion = () => {
+interface AISuggestionProps {
+  onPlacesUpdate: (places: Place[]) => void;
+}
+
+export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) => {
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
   const [category, setCategory] = useState('');
@@ -51,6 +56,7 @@ export const AISuggestion = () => {
     try {
       const places = await suggestPlaceFromDescription({ city: city.toLowerCase(), description, category: category.toLowerCase() });
       setSuggestedPlaces(places);
+      onPlacesUpdate(places); // Notify the parent component about the new places
     } catch (error) {
       console.error("Ошибка при предложении мест:", error);
       alert('Не удалось получить предложения мест. Пожалуйста, попробуйте еще раз.');
