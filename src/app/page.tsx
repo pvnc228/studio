@@ -20,10 +20,13 @@ export default function Home() {
         <CardContent className="space-y-4">
           <CitySelection />
           <CategorySelection />
-          <RouteDisplay />
           <AISuggestion />
+          <RouteDisplay />
         </CardContent>
       </Card>
     </div>
   );
 }
+
+
+    
