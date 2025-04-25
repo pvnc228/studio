@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
 import { Place } from "@/services/places";
 
@@ -12,6 +12,7 @@ interface RouteDisplayProps {
 
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   useEffect(() => {
     // Load the API key from environment variables
@@ -34,6 +35,10 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
   const defaultCenter = {
     lat: 55.7558, // Default to Moscow
     lng: 37.6173,
+  };
+
+  const handleMarkerClick = (place: Place) => {
+    setSelectedPlace(place);
   };
 
   if (!apiKey) {
@@ -65,8 +70,21 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                   key={index}
                   position={place.location}
                   title={place.name}
+                  onClick={() => handleMarkerClick(place)}
                 />
               ))}
+                {selectedPlace && (
+                    <InfoWindow
+                        position={selectedPlace.location}
+                        onCloseClick={() => setSelectedPlace(null)}
+                    >
+                        <div>
+                            <h3>{selectedPlace.name}</h3>
+                            <p>{selectedPlace.description}</p>
+                            <p>Категория: {selectedPlace.category}</p>
+                        </div>
+                    </InfoWindow>
+                )}
             </GoogleMap>
           </LoadScript>
         ) : (

@@ -7,6 +7,7 @@ import { AISuggestion } from '@/components/AISuggestion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
 import { Place } from '@/services/places';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Home() {
   const [places, setPlaces] = useState<Place[]>([]);
@@ -27,9 +28,18 @@ export default function Home() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <CitySelection />
-          <CategorySelection />
-          <AISuggestion onPlacesUpdate={handlePlacesUpdate} />
+          <Tabs defaultvalue="manual">
+            <TabsList>
+              <TabsTrigger value="manual">Ручной Подбор</TabsTrigger>
+              <TabsTrigger value="ai">AI Подбор</TabsTrigger>
+            </TabsList>
+            <TabsContent value="manual" className="space-y-4">
+              <CitySelection onPlacesUpdate={handlePlacesUpdate} />
+            </TabsContent>
+            <TabsContent value="ai" className="space-y-4">
+              <AISuggestion onPlacesUpdate={handlePlacesUpdate} />
+            </TabsContent>
+          </Tabs>
           <RouteDisplay places={places} />
         </CardContent>
       </Card>

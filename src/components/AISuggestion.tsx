@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/select";
 import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
 import { Place } from "@/services/places";
-import { RouteDisplay } from "@/components/RouteDisplay";
 
 interface AISuggestionProps {
   onPlacesUpdate: (places: Place[]) => void;
