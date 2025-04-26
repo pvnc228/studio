@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
 import { Place } from "@/services/places";
+import { Loader2 } from 'lucide-react'; // Import loader icon
 
 interface AISuggestionProps {
   onPlacesUpdate: (places: Place[]) => void;
@@ -23,7 +25,8 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
   const [category, setCategory] = useState('');
-  const [suggestedPlaces, setSuggestedPlaces] = useState<Place[]>([]);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
   const cities = [
     'Москва',
@@ -47,76 +50,96 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
   ];
 
   const handleSuggestion = async () => {
+    setError(null); // Reset error
     if (!city || !description || !category) {
-      alert('Пожалуйста, выберите город, введите описание и выберите категорию.');
+      setError('Пожалуйста, выберите город, введите описание и выберите категорию.');
       return;
     }
 
+    setIsLoading(true); // Start loading
     try {
       const places = await suggestPlaceFromDescription({ city: city.toLowerCase(), description, category: category.toLowerCase() });
-      setSuggestedPlaces(places);
       onPlacesUpdate(places); // Notify the parent component about the new places
     } catch (error) {
       console.error("Ошибка при предложении мест:", error);
-      alert('Не удалось получить предложения мест. Пожалуйста, попробуйте еще раз.');
+      setError('Не удалось получить предложения мест. Пожалуйста, попробуйте еще раз.');
+      onPlacesUpdate([]); // Clear places on error
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
   return (
-    <Card className="w-full">
-      <CardContent className="grid gap-4">
-        <h2 className="text-lg font-semibold">AI Подбор Мест</h2>
+    <Card className="w-full border border-border bg-card shadow-md rounded-lg">
+      <CardContent className="p-6 grid gap-5">
+        <h2 className="text-xl font-semibold text-foreground">AI Подбор Мест</h2>
+        <p className="text-muted-foreground text-sm">
+          Опишите желаемое место, и наш AI подберет лучшие варианты для вас.
+        </p>
 
-        <Label htmlFor="city">Город</Label>
-        <Select onValueChange={setCity}>
-          <SelectTrigger id="city">
-            <SelectValue placeholder="Выберите город" />
-          </SelectTrigger>
-          <SelectContent>
-            {cities.map((ct) => (
-              <SelectItem key={ct} value={ct.toLowerCase()}>
-                {ct}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Label htmlFor="category">Категория</Label>
-        <Select onValueChange={setCategory}>
-          <SelectTrigger id="category">
-            <SelectValue placeholder="Выберите категорию" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((cat) => (
-              <SelectItem key={cat} value={cat.toLowerCase()}>
-                {cat}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Label htmlFor="description">Описание</Label>
-        <Input
-          id="description"
-          placeholder="Опишите место, которое вы ищете"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <Button onClick={handleSuggestion}>Предложить Места</Button>
-
-        {suggestedPlaces.length > 0 && (
-          <div className="mt-4">
-            <h3>Предложенные Места:</h3>
-            <ul>
-              {suggestedPlaces.map((place) => (
-                <li key={place.name}>
-                  {place.name} ({place.category}) - {place.description}
-                </li>
-              ))}
-            </ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="ai-city" className="mb-2 block font-medium text-foreground">Город</Label>
+            <Select onValueChange={setCity} value={city}>
+              <SelectTrigger id="ai-city" className="h-11 text-base">
+                <SelectValue placeholder="Выберите город" />
+              </SelectTrigger>
+              <SelectContent>
+                {cities.map((ct) => (
+                  <SelectItem key={ct} value={ct.toLowerCase()} className="text-base">
+                    {ct}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        )}
+          <div>
+            <Label htmlFor="ai-category" className="mb-2 block font-medium text-foreground">Категория</Label>
+            <Select onValueChange={setCategory} value={category}>
+              <SelectTrigger id="ai-category" className="h-11 text-base">
+                <SelectValue placeholder="Выберите категорию" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((cat) => (
+                  <SelectItem key={cat} value={cat.toLowerCase()} className="text-base">
+                    {cat}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+
+        <div>
+          <Label htmlFor="ai-description" className="mb-2 block font-medium text-foreground">Описание</Label>
+          <Input
+            id="ai-description"
+            placeholder="Например: Уютное кафе с видом на реку и веганскими опциями"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="h-11 text-base"
+          />
+        </div>
+
+        {error && <p className="text-sm text-destructive font-medium">{error}</p>}
+
+        <Button
+          onClick={handleSuggestion}
+          disabled={isLoading}
+          size="lg" // Use large button size
+          className="w-full flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:scale-[1.02]"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Подбираем...
+            </>
+          ) : (
+            'Предложить Места'
+          )}
+        </Button>
+
       </CardContent>
     </Card>
   );

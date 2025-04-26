@@ -50,7 +50,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                 <li key={place.name} className="p-5 border border-border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-background">
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-3">
                     <img
-                      src={place.imageUrl || 'https://picsum.photos/200/200'} // Use placeholder if no image
+                      src={place.imageUrl || 'https://picsum.photos/150/150'} // Use placeholder if no image
                       alt={place.name}
                       width={150}
                       height={150}
