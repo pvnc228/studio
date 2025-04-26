@@ -71,7 +71,7 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
 
   return (
     <Card className="w-full border border-border bg-card shadow-md rounded-lg">
-      <CardContent className="p-6 grid gap-5">
+      <CardContent className="p-5 grid gap-2">
         <h2 className="text-xl font-semibold text-foreground">AI Подбор Мест</h2>
         <p className="text-muted-foreground text-sm">
           Опишите желаемое место, и наш AI подберет лучшие варианты для вас.

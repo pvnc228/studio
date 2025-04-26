@@ -70,7 +70,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                   {place.dateFounded && <p className="text-sm text-muted-foreground mb-1"><strong>Дата основания:</strong> {place.dateFounded}</p>}
                   {place.averagePrice && <p className="text-sm text-muted-foreground mb-1"><strong>Средний чек:</strong> {place.averagePrice}</p>}
 
-                  {place.yandexMapsUrl && (
+                  {place.googleMapsUrl && (
                      <Button
                       asChild
                       variant="default" // Use default colorful button
@@ -79,7 +79,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                       onClick={() => handleMapLinkClick(place)} // Call history function on click
                     >
                       <a
-                        href={place.yandexMapsUrl}
+                        href={place.googleMapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`Посмотреть ${place.name} на Яндекс Картах`}

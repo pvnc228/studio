@@ -67,33 +67,33 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
         category: 'ресторан',
         location: { lat: 55.7592, lng: 37.6092 },
         description: 'Элегантный ресторан с русской дворянской кухней, расположенный в историческом особняке.',
-        imageUrl: 'https://pushkin-cafe.ru/wp-content/uploads/2020/12/DSC_5397-HDR-%D0%9A%D0%BE%D0%BF%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-1.jpg',
+        imageUrl: 'https://cafe-pushkin.ru/wp-content/themes/dellos/img/logo.png',
         dateFounded: '1999',
         averagePrice: '3500-7000 ₽',
         rating: 4.7,
-        googleMapsUrl: 'https://maps.app.goo.gl/jF1hL6k3sP9rN8oF7'
+        googleMapsUrl: 'https://maps.app.goo.gl/fS1p8QDLW7bpMdSg7'
       },
       {
         name: 'White Rabbit',
         category: 'ресторан',
         location: { lat: 55.7490, lng: 37.5800 },
         description: 'Ресторан современной русской кухни с панорамным видом на Москву.',
-        imageUrl: 'https://whiterabbitmoscow.ru/images/background/about-main.jpg',
+        imageUrl: 'https://whiterabbitmoscow.ru/images/logo.png',
         dateFounded: '2011',
         averagePrice: '4000-8000 ₽',
         rating: 4.6,
-        googleMapsUrl: 'https://maps.app.goo.gl/yGjV7XkF6L8R9bC9'
+        googleMapsUrl: 'https://maps.app.goo.gl/4YAgDYinj9sJdajJA'
       },
        {
         name: 'Кафе "Dr. Живаго"',
         category: 'ресторан',
         location: { lat: 55.7595, lng: 37.6122 },
         description: 'Ресторан с панорамным видом на Кремль, предлагающий современную русскую кухню.',
-        imageUrl: 'https://avatars.mds.yandex.net/get-altay/238714/2a0000016723c818e4a57487a8013e33c108/XXL_height',
+        imageUrl: 'https://api.drzhivago.rappoport.restaurant/storage/images/module_page/blocks/cf70a8fb.svg',
         dateFounded: '2012',
         averagePrice: '2500-4000 ₽',
         rating: 4.2,
-        googleMapsUrl: 'https://maps.app.goo.gl/a1B2c3d4e5F6g7H8' // Replace with actual URL if available
+        googleMapsUrl: 'https://maps.app.goo.gl/cdiD9PZfhhu56Y3T8' // Replace with actual URL if available
       },
     ],
     'кафе': [
@@ -102,22 +102,22 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
         category: 'кафе',
         location: { lat: 55.7600, lng: 37.6150 },
         description: 'Популярная сеть кофеен с широким выбором кофейных напитков и десертов.',
-        imageUrl: 'https://top10.travel/wp-content/uploads/2022/12/kofemaniya-v-moskve.jpg',
+        imageUrl: 'https://toplogos.ru/images/logo-coffeemania.jpg',
         dateFounded: '2001',
         averagePrice: '800-1500 ₽',
-        rating: 4.0,
-        googleMapsUrl: 'https://maps.app.goo.gl/i9JkL0mN1oP2q3R4' // Replace with actual URL if available
+        rating: 4.4,
+        googleMapsUrl: 'https://maps.app.goo.gl/J82LfYdCRJq2sKtw8' // Replace with actual URL if available
       },
       {
         name: 'Кафе "АндерСон"',
         category: 'кафе',
         location: { lat: 55.7580, lng: 37.6100 },
         description: 'Семейное кафе с уютной атмосферой и вкусными десертами для детей и взрослых.',
-        imageUrl: 'https://www.gastronom.ru/binfiles/images/20170203/b8d2b45a-f905-4593-a531-540889c7c0a4.jpg',
+        imageUrl: 'https://www.retail.ru/upload/iblock/e86/1jnwkndoa7u9ify8ddgkl3knll6d2qvh/640x640_ec879263db139823c4595a8778970a1f_jpg_9_c490718d.jpg',
         dateFounded: '2009',
         averagePrice: '1000-2000 ₽',
         rating: 4.3,
-        googleMapsUrl: 'https://maps.app.goo.gl/s5T6u7V8w9XyZ0aB' // Replace with actual URL if available
+        googleMapsUrl: 'https://maps.app.goo.gl/B1BGzeDJ2GuzH5jb6' // Replace with actual URL if available
       },
     ],
      'бар': [
@@ -126,22 +126,22 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
           category: 'бар',
           location: { lat: 55.7650, lng: 37.6000 },
           description: 'Популярный бар с авторскими коктейлями и непринужденной атмосферой.',
-          imageUrl: 'https://static.tildacdn.com/tild3334-3464-4038-a661-323263306538/18.jpg',
+          imageUrl: 'https://onparty.app/img/place/moscow/klava/logo.webp',
           dateFounded: '2010',
           averagePrice: '1000-2000 ₽',
           rating: 4.4,
-          googleMapsUrl: 'https://maps.app.goo.gl/wE5F6g7H8i9JkL0m' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/wo3iaeW2U2knEEPw7' // Replace with actual URL if available
         },
         {
           name: 'Бар " Noor Bar"',
           category: 'бар',
           location: { lat: 55.7630, lng: 37.6120 },
           description: 'Стильный бар с классическими коктейлями и DJ-сетами по выходным.',
-          imageUrl: 'https://media-cdn.tripadvisor.com/media/photo-s/07/87/24/43/noor-bar.jpg',
+          imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYqUzS2QLPpI3FqEnrNaQsHEqGIgKqFeK_jg&s',
           dateFounded: '2009',
           averagePrice: '1200-2500 ₽',
           rating: 4.5,
-          googleMapsUrl: 'https://maps.app.goo.gl/N1oP2q3R4s5T6u7V' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/m1n58W1Lkjuwtoz98' // Replace with actual URL if available
         },
       ],
       'кинотеатр': [
@@ -150,22 +150,22 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
           category: 'кинотеатр',
           location: { lat: 55.7525, lng: 37.5855 },
           description: 'Крупный кинотеатр на Новом Арбате с множеством залов и премьерными показами.',
-          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Kino_Oktyabr_Moscow.jpg/1200px-Kino_Oktyabr_Moscow.jpg',
+          imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2ahOfMd8xabAtsYMp0dIGRlbq_mqByG6F4w&s',
           dateFounded: '1967',
           averagePrice: '300-800 ₽',
           rating: 4.3,
-          googleMapsUrl: 'https://maps.app.goo.gl/X7yZ0aB1c2D3e4F5' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/RCJAASX5g3vht7TK6' // Replace with actual URL if available
         },
         {
           name: 'Кинотеатр "Пионер"',
           category: 'кинотеатр',
           location: { lat: 55.7340, lng: 37.5610 },
           description: 'Исторический кинотеатр с акцентом на авторское и фестивальное кино.',
-          imageUrl: 'https://pioner-cinema.ru/wp-content/uploads/2017/11/pioner-1.jpg',
+          imageUrl: 'https://static.tildacdn.com/tild6264-3434-4461-b338-303963623131/logo_pioner-01.svg',
           dateFounded: '1953',
           averagePrice: '400-900 ₽',
           rating: 4.6,
-          googleMapsUrl: 'https://maps.app.goo.gl/H8i9JkL0mN1oP2q3' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/Cma2HhiaTxyu33ESA' // Replace with actual URL if available
         },
       ],
        'театр': [
@@ -174,22 +174,22 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
           category: 'театр',
           location: { lat: 55.7601, lng: 37.6187 },
           description: 'Главный театр оперы и балета России, всемирно известный символ русской культуры.',
-          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Bolshoi_Theatre_Moscow_2015.jpg/1024px-Bolshoi_Theatre_Moscow_2015.jpg',
+          imageUrl: 'https://img.artlebedev.ru/everything/bolshoi/logo/bolshoi-logo-main.gif',
           dateFounded: '1776',
           averagePrice: '2000-15000 ₽',
           rating: 4.8,
-          googleMapsUrl: 'https://maps.app.goo.gl/R4s5T6u7V8w9XyZ0' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/H6uguhtbtCAQwvBC8' // Replace with actual URL if available
         },
         {
           name: 'Малый театр',
           category: 'театр',
           location: { lat: 55.7596, lng: 37.6198 },
           description: 'Один из старейших драматических театров России, известный своими классическими постановками.',
-          imageUrl: 'https://www.maly.ru/upload/medialibrary/c7c/c7cfb3c6ab37287152f970b633ed347f.jpg',
+          imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvaHN48cV0m6LxOSgPNXb5b8MJeN3BiY9kzg&s',
           dateFounded: '1756',
           averagePrice: '1000-5000 ₽',
           rating: 4.7,
-          googleMapsUrl: 'https://maps.app.goo.gl/aB1c2D3e4F5g6H7i' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/rvyNBptkhURKpHoY6' // Replace with actual URL if available
         },
       ],
     'отель': [
@@ -198,22 +198,22 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
         category: 'отель',
         location: { lat: 55.7550, lng: 37.6200 },
         description: 'Исторический отель в центре Москвы с роскошными номерами и изысканными ресторанами.',
-        imageUrl: 'https://r-cf.bstatic.com/images/hotel/max1024x768/276/276290558.jpg',
+        imageUrl: 'https://abali.ru/wp-content/uploads/2015/04/logo_metropol_hotel_moscow.png',
         dateFounded: '1905',
         averagePrice: '15000-30000 ₽',
         rating: 4.6,
-        googleMapsUrl: 'https://maps.app.goo.gl/c1D2e3F4g5H6i7J8' // Replace with actual URL if available
+        googleMapsUrl: 'https://maps.app.goo.gl/KqrWLBffNHfk8NCq8' // Replace with actual URL if available
       },
       {
         name: 'Отель "The Ritz-Carlton"',
         category: 'отель',
         location: { lat: 55.7560, lng: 37.6180 },
         description: 'Роскошный отель рядом с Красной площадью, предлагающий высочайший уровень сервиса и комфорта.',
-        imageUrl: 'https://media.cntraveler.com/photos/64fa523ccb995a428444436e/16:9/w_3840,h_2160,c_limit/The%20Ritz-Carlton%20Moscow-Pool-5.jpg',
+        imageUrl: 'https://carltonmoscow.com/upload/resize_cache/iblock/774/130_100_1619711fa078991f0a23d032687646b21/7y76l7kmemc9axc2svkty1gzzaurwv7t.webp',
         dateFounded: '2007',
         averagePrice: '20000-40000 ₽',
         rating: 4.7,
-        googleMapsUrl: 'https://maps.app.goo.gl/k9L0mN1oP2q3R4sT' // Replace with actual URL if available
+        googleMapsUrl: 'https://maps.app.goo.gl/gNZRjcM9ELpEA5TH8' // Replace with actual URL if available
       },
     ],
     'парк': [
@@ -222,22 +222,22 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
           category: 'парк',
           location: { lat: 55.7300, lng: 37.6000 },
           description: 'Центральный парк культуры и отдыха с набережной, велодорожками, музеями и кафе.',
-          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Gorky_Park_in_Moscow_01.jpg/1200px-Gorky_Park_in_Moscow_01.jpg',
+          imageUrl: 'https://img.artlebedev.ru/everything_files/images/2420/gorkypark-anon-neu.png.webp',
           dateFounded: '1928',
           averagePrice: 'Бесплатно',
           rating: 4.8,
-          googleMapsUrl: 'https://maps.app.goo.gl/K7l8M9n0oP1qR2s3' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/4PuDFNDCYUeAJNz39' // Replace with actual URL if available
         },
         {
           name: 'Парк "Зарядье"',
           category: 'парк',
           location: { lat: 55.7510, lng: 37.6280 },
           description: 'Современный парк рядом с Кремлем с уникальным ландшафтным дизайном и парящим мостом.',
-          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Zaryadye_Park_Floating_Bridge_2021.jpg/1200px-Zaryadye_Park_Floating_Bridge_2021.jpg',
+          imageUrl: 'https://img.artlebedev.ru/everything/zaryadye/identity/zaryadye-main-logo-rus.gif',
           dateFounded: '2017',
           averagePrice: 'Бесплатно',
           rating: 4.7,
-          googleMapsUrl: 'https://maps.app.goo.gl/T4uV5w6X7yZ8aB0c' // Replace with actual URL if available
+          googleMapsUrl: 'https://maps.app.goo.gl/ZZHafHhGphwExPFw5' // Replace with actual URL if available
         },
       ],
   },
