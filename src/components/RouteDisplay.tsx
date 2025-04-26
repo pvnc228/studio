@@ -1,8 +1,8 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"; // Import Button component
 import { MapPin } from "lucide-react";
-import { useState, useEffect } from 'react';
 import { Place } from "@/services/places";
 
 interface RouteDisplayProps {
@@ -10,79 +10,70 @@ interface RouteDisplayProps {
 }
 
 const StarRating = ({ rating }: { rating: number }) => {
-  const stars = Array.from({ length: 5 }, (_, index) => (
-    <span key={index} className={index < rating ? "text-yellow-500" : "text-gray-300"}>
-      ★
-    </span>
-  ));
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
-  return <>{stars}</>;
+  return (
+    <div className="flex">
+      {Array.from({ length: fullStars }).map((_, index) => (
+        <span key={`full-${index}`} className="text-yellow-500">★</span>
+      ))}
+      {halfStar && <span className="text-yellow-500">★</span>} {/* Display half star as full for simplicity or use a half star icon */}
+      {Array.from({ length: emptyStars }).map((_, index) => (
+        <span key={`empty-${index}`} className="text-gray-300">★</span>
+      ))}
+    </div>
+  );
 };
 
-
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
-  const [apiKey] = useState<string>(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '');
-  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [showMap, setShowMap] = useState(false);
-
-  useEffect(() => {
-    if (!apiKey) {
-      console.error("Google Maps API key not found in environment variables.");
-    }
-  }, [apiKey]);
-
-  const mapStyles = {
-    height: '400px',
-    width: '100%',
-  };
-
-  const defaultCenter = {
-    lat: 55.7558, // Default to Moscow
-    lng: 37.6173,
-  };
-
-  const handleMarkerClick = (place: Place) => {
-    setSelectedPlace(place);
-  };
-
-    const handleShowMap = () => {
-        setShowMap(true);
-    };
 
   return (
     <Card className="w-full shadow-md">
       <CardContent className="grid gap-4">
-        <h2 className="text-lg font-semibold">Отображение Маршрута</h2>
+        <h2 className="text-lg font-semibold">Выбранные Места:</h2>
 
         <div>
-          <h3>Выбранные Места:</h3>
           {places.length > 0 ? (
-            <ul>
+            <ul className="space-y-4">
               {places.map((place) => (
-                <li key={place.name} className="mb-4 p-4 border rounded-md">
-                  <div className="flex items-center mb-2">
-                    <img src={place.imageUrl} alt={place.name} className="w-20 h-20 object-cover rounded mr-4" />
-                    <div>
-                      <h4 className="text-lg font-semibold">{place.name}</h4>
-                      <p className="text-sm text-gray-500">{place.category}</p>
+                <li key={place.name} className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center mb-2">
+                    <img
+                      src={place.imageUrl || 'https://picsum.photos/200/200'} // Use placeholder if no image
+                      alt={place.name}
+                      className="w-full sm:w-24 h-24 object-cover rounded-md mr-0 sm:mr-4 mb-2 sm:mb-0 flex-shrink-0"
+                    />
+                    <div className="flex-grow">
+                      <h4 className="text-xl font-semibold">{place.name}</h4>
+                      <p className="text-sm text-muted-foreground">{place.category}</p>
                     </div>
                   </div>
-                  <p>{place.description}</p>
-                  {place.dateFounded && <p>Дата основания: {place.dateFounded}</p>}
-                  {place.averagePrice && <p>Средняя цена: {place.averagePrice}</p>}
+                  <p className="mb-2">{place.description}</p>
+                  {place.dateFounded && <p className="text-sm text-muted-foreground">Дата основания: {place.dateFounded}</p>}
+                  {place.averagePrice && <p className="text-sm text-muted-foreground">Средний чек: {place.averagePrice}</p>}
                   {place.rating && (
-                    <div className="flex items-center">
-                      Рейтинг: <StarRating rating={place.rating} />
+                    <div className="flex items-center mb-2">
+                      <span className="text-sm text-muted-foreground mr-1">Рейтинг:</span> <StarRating rating={place.rating} />
                     </div>
                   )}
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${place.location.lat},${place.location.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    Посмотреть на карте
-                  </a>
+                  {place.googleMapsUrl && (
+                     <Button
+                      asChild
+                      variant="outline"
+                      className="mt-2 inline-flex items-center gap-2 bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
+                    >
+                      <a
+                        href={place.googleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MapPin className="h-4 w-4" />
+                        Посмотреть на карте
+                      </a>
+                    </Button>
+                  )}
                 </li>
               ))}
             </ul>

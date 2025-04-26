@@ -51,6 +51,11 @@ export interface Place {
    * Рейтинг места
    */
   rating?: number;
+
+  /**
+   * URL на Google Maps для места
+   */
+  googleMapsUrl?: string;
 }
 
 /**
@@ -74,7 +79,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://www.restoranpushkin.ru/upload/iblock/e8a/e8aa94997313f436d18718f9941bf423.jpg',
           dateFounded: '1999',
           averagePrice: '3000-5000 ₽',
-          rating: 4.5
+          rating: 4.5,
+          googleMapsUrl: 'https://maps.app.goo.gl/jF1hL6k3sP9rN8oF7'
         },
         {
           name: 'Кафе "Dr. Живаго"',
@@ -84,7 +90,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://avatars.mds.yandex.net/get-altay/238714/2a0000016723c818e4a57487a8013e33c108/XXL_height',
           dateFounded: '2012',
           averagePrice: '2500-4000 ₽',
-          rating: 4.2
+          rating: 4.2,
+          googleMapsUrl: 'https://maps.app.goo.gl/a1B2c3d4e5F6g7H8' // Replace with actual URL if available
         },
       ];
     } else if (category === 'кафе') {
@@ -97,7 +104,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://top10.travel/wp-content/uploads/2022/12/kofemaniya-v-moskve.jpg',
           dateFounded: '2001',
           averagePrice: '800-1500 ₽',
-          rating: 4.0
+          rating: 4.0,
+          googleMapsUrl: 'https://maps.app.goo.gl/i9JkL0mN1oP2q3R4' // Replace with actual URL if available
         },
         {
           name: 'Кафе "АндерСон"',
@@ -107,7 +115,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://www.gastronom.ru/binfiles/images/20170203/b8d2b45a-f905-4593-a531-540889c7c0a4.jpg',
           dateFounded: '2009',
           averagePrice: '1000-2000 ₽',
-          rating: 4.3
+          rating: 4.3,
+          googleMapsUrl: 'https://maps.app.goo.gl/s5T6u7V8w9XyZ0aB' // Replace with actual URL if available
         },
       ];
     } else if (category === 'отель') {
@@ -120,7 +129,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://r-cf.bstatic.com/images/hotel/max1024x768/276/276290558.jpg',
           dateFounded: '1905',
           averagePrice: '15000-30000 ₽',
-          rating: 4.6
+          rating: 4.6,
+          googleMapsUrl: 'https://maps.app.goo.gl/c1D2e3F4g5H6i7J8' // Replace with actual URL if available
         },
         {
           name: 'Отель "The Ritz-Carlton"',
@@ -130,7 +140,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://media.cntraveler.com/photos/64fa523ccb995a428444436e/16:9/w_3840,h_2160,c_limit/The%20Ritz-Carlton%20Moscow-Pool-5.jpg',
           dateFounded: '2007',
           averagePrice: '20000-40000 ₽',
-          rating: 4.7
+          rating: 4.7,
+          googleMapsUrl: 'https://maps.app.goo.gl/k9L0mN1oP2q3R4sT' // Replace with actual URL if available
         },
       ];
     }
@@ -147,7 +158,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://kudago.com/media/images/news/main_news/820x470_08_cafe_singer_1.jpg',
           dateFounded: '1904',
           averagePrice: '1200-2500 ₽',
-          rating: 4.4
+          rating: 4.4,
+          googleMapsUrl: 'https://maps.app.goo.gl/GzJo9Q6dfgi8a3AB8'
         },
         {
           name: 'Кафе "Пышечная"',
@@ -157,7 +169,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://static.ngs.ru/news/99/preview_861a1c4f2543564338f5ba5e9ca2a64e.jpg',
           dateFounded: '1958',
           averagePrice: '200-500 ₽',
-          rating: 4.1
+          rating: 4.1,
+          googleMapsUrl: 'https://maps.app.goo.gl/u5V6w7X8y9ZaB0cD' // Replace with actual URL if available
         },
       ];
     } else if (category === 'бар') {
@@ -170,7 +183,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://scontent-hel3-1.cdninstagram.com/v/t39.30808-6/302979191_444446384379843_7349941254701475151_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybF9zZWN1cmUiLCJwcm9kdWN0X3R5cGUiOiJzaGFyZV90byJ9&_nc_ht=scontent-hel3-1.cdninstagram.com&_nc_cat=103&_nc_ohc=JQkJ_lG0o8QAX-KP-tQ&edm=APs17CUBAAAA&ccb=7-5&oh=00_AfC-m-9J_etQXxytSa-O-s9HlS9nC-1R-6t-wKYyrhYQGQ&oe=6670B80A&_nc_sid=10d13b',
           dateFounded: '2014',
           averagePrice: '1500-3000 ₽',
-          rating: 4.5
+          rating: 4.5,
+          googleMapsUrl: 'https://maps.app.goo.gl/e1F2g3H4i5J6k7L8' // Replace with actual URL if available
         },
         {
           name: 'Бар "El Copitas"',
@@ -180,7 +194,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://copitasbar.com/images/slider/slider3.jpg',
            dateFounded: '2015',
           averagePrice: '1800-3500 ₽',
-          rating: 4.6
+          rating: 4.6,
+          googleMapsUrl: 'https://maps.app.goo.gl/m9N0oP1qR2s3T4uV' // Replace with actual URL if available
         },
       ];
     } else if (category === 'отель') {
@@ -193,7 +208,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/a9/2a/2c/four-seasons-hotel-lion.jpg?w=700&h=-1&s=1',
            dateFounded: '2013',
           averagePrice: '25000-50000 ₽',
-          rating: 4.8
+          rating: 4.8,
+          googleMapsUrl: 'https://maps.app.goo.gl/w7X8y9ZaB0cD1eFg' // Replace with actual URL if available
         },
         {
           name: 'Отель "Belmond Grand Hotel Europe"',
@@ -203,7 +219,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
           imageUrl: 'https://www.belmond.com/assets/34/BGE_Suite_Winter_1600x900.jpg',
            dateFounded: '1875',
           averagePrice: '20000-40000 ₽',
-          rating: 4.7
+          rating: 4.7,
+          googleMapsUrl: 'https://maps.app.goo.gl/h4I5j6K7l8M9n0oP' // Replace with actual URL if available
         },
       ];
     }
@@ -219,7 +236,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
         imageUrl: 'https://www.suzdalhotel.ru/images/numbers/standart-big1.jpg',
          dateFounded: '2007',
           averagePrice: '8000-15000 ₽',
-          rating: 4.3
+          rating: 4.3,
+          googleMapsUrl: 'https://maps.app.goo.gl/qR2s3T4uV5w6X7yZ' // Replace with actual URL if available
       },
     ];
   }
@@ -234,7 +252,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
         imageUrl: 'https://www.otelsuzdal.ru/img/rooms/room18.jpg',
          dateFounded: '2005',
           averagePrice: '7000-12000 ₽',
-          rating: 4.2
+          rating: 4.2,
+          googleMapsUrl: 'https://maps.app.goo.gl/aB0cDeFg1h2I3j4K' // Replace with actual URL if available
       },
     ];
   }
@@ -249,7 +268,8 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
         imageUrl: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/149319444.jpg?k=26299f648289336e8ef1804557df4969c580133c44b43f4a8099d77cd9e46b6c&o=&hp=1',
          dateFounded: '2010',
           averagePrice: '6000-10000 ₽',
-          rating: 4.1
+          rating: 4.1,
+          googleMapsUrl: 'https://maps.app.goo.gl/l8M9n0oP1qR2s3T4' // Replace with actual URL if available
       },
     ];
   }
