@@ -1,98 +1,97 @@
 # RouteWise
 
-This is a Next.js application built in Firebase Studio for personalized travel route planning in Russian cities.
+Это приложение на Next.js, созданное в Firebase Studio для персонализированного планирования туристических маршрутов по городам России.
 
-## Getting Started
+## Начало работы
 
-Follow these steps to set up and run the project locally:
+Следуйте этим шагам для настройки и запуска проекта локально:
 
-### Prerequisites
+### Предварительные требования
 
-- Node.js (version 18 or later recommended)
-- npm or yarn
+- Node.js (рекомендуется версия 18 или новее)
+- npm или yarn
 
-### Installation
+### Установка
 
-1.  **Clone the repository (if applicable):**
+1.  **Клонируйте репозиторий (если применимо):**
     ```bash
     git clone <repository_url>
     cd <repository_directory>
     ```
 
-2.  **Install dependencies:**
+2.  **Установите зависимости:**
     ```bash
     npm install
-    # or
+    # или
     # yarn install
     ```
 
-### Running the Development Server
+### Запуск сервера разработки
 
-To start the Next.js development server:
+Чтобы запустить сервер разработки Next.js:
 
 ```bash
 npm run dev
-# or
+# или
 # yarn dev
 ```
 
-This will typically start the server on `http://localhost:9002`. Open this URL in your browser to see the application.
+Обычно это запускает сервер по адресу `http://localhost:9002`. Откройте этот URL в вашем браузере, чтобы увидеть приложение.
 
-### Running the Genkit Development Server (Optional)
+### Запуск сервера разработки Genkit (Опционально)
 
-If you need to interact with the Genkit flows directly or use the Genkit developer UI:
+Если вам нужно напрямую взаимодействовать с потоками Genkit или использовать интерфейс разработчика Genkit:
 
 ```bash
 npm run genkit:dev
-# or for watching changes
+# или для отслеживания изменений
 npm run genkit:watch
 ```
 
-This will start the Genkit development server, usually on `http://localhost:4000`.
+Это запустит сервер разработки Genkit, обычно по адресу `http://localhost:4000`.
 
-### Building for Production
+### Сборка для продакшена
 
-To build the application for production:
+Чтобы собрать приложение для продакшена:
 
 ```bash
 npm run build
-# or
+# или
 # yarn build
 ```
 
-### Starting the Production Server
+### Запуск продакшен сервера
 
-After building, you can start the production server:
+После сборки вы можете запустить продакшен сервер:
 
 ```bash
 npm run start
-# or
+# или
 # yarn start
 ```
 
-## Technologies Used
+## Используемые технологии
 
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **UI Library:** [React](https://reactjs.org/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components:** [ShadCN UI](https://ui.shadcn.com/)
-- **Icons:** [Lucide React](https://lucide.dev/)
-- **AI/Generative:** [Genkit](https://firebase.google.com/docs/genkit) with [Google AI (Gemini)](https://ai.google.dev/)
-- **State Management:** React Hooks (`useState`, `useEffect`, `useCallback`)
-- **Package Manager:** npm / yarn
+- **Фреймворк:** [Next.js](https://nextjs.org/) (App Router)
+- **Язык:** [TypeScript](https://www.typescriptlang.org/)
+- **UI Библиотека:** [React](https://reactjs.org/)
+- **Стилизация:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Компоненты:** [ShadCN UI](https://ui.shadcn.com/)
+- **Иконки:** [Lucide React](https://lucide.dev/)
+- **AI/Генеративные модели:** [Genkit](https://firebase.google.com/docs/genkit) с [Google AI (Gemini)](https://ai.google.dev/)
+- **Управление состоянием:** React Hooks (`useState`, `useEffect`, `useCallback`)
+- **Менеджер пакетов:** npm / yarn
 
-## Project Structure
+## Структура проекта
 
-- `src/app/`: Contains the main application pages and layout (Next.js App Router).
-- `src/components/`: Reusable React components.
-  - `src/components/ui/`: Components from ShadCN UI.
-- `src/ai/`: Genkit related code.
-  - `src/ai/flows/`: Genkit flows for AI interactions.
-  - `src/ai/ai-instance.ts`: Genkit configuration.
-- `src/services/`: Contains service functions, like fetching place data.
-- `src/lib/`: Utility functions.
-- `src/hooks/`: Custom React hooks.
-- `public/`: Static assets.
-- `styles/`: Global CSS styles.
-```
+- `src/app/`: Содержит основные страницы приложения и макет (Next.js App Router).
+- `src/components/`: Переиспользуемые React компоненты.
+  - `src/components/ui/`: Компоненты из ShadCN UI.
+- `src/ai/`: Код, связанный с Genkit.
+  - `src/ai/flows/`: Потоки Genkit для взаимодействий с AI.
+  - `src/ai/ai-instance.ts`: Конфигурация Genkit.
+- `src/services/`: Содержит сервисные функции, такие как получение данных о местах.
+- `src/lib/`: Утилитарные функции.
+- `src/hooks/`: Пользовательские React хуки.
+- `public/`: Статические активы.
+- `styles/`: Глобальные CSS стили.
