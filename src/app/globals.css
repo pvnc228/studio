@@ -1,3 +1,4 @@
+
 /** @type {import('tailwindcss').Config} */
 @tailwind base;
 @tailwind components;
@@ -23,7 +24,7 @@ body {
     --muted: 210 40% 96.1%; /* Light Gray */
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 231 69% 63%; /* Google Green */
-    --accent-foreground: 0 0% 0%;
+    --accent-foreground: 0 0% 100%; /* Changed accent foreground to white for better contrast */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
@@ -48,22 +49,22 @@ body {
   .dark {
     --background: 220 13% 13%; /* Dark background */
     --foreground: 220 14% 86%; /* Light text */
-    --card: 0 0% 5%; /* Dark card */
+    --card: 220 13% 18%; /* Slightly lighter dark card */
     --card-foreground: 0 0% 95%; /* Light card text */
-    --popover: 0 0% 5%; /* Dark popover */
+    --popover: 220 13% 18%; /* Dark popover */
     --popover-foreground: 0 0% 95%; /* Light popover text */
     --primary: 48 63% 51%; /* Google Blue */
-    --primary-foreground: 0 0% 10%; /* Dark */
-    --secondary: 210 40% 20%; /* Dark Gray */
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 20%; /* Dark Gray */
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary: 210 40% 25%; /* Slightly lighter dark gray */
+    --secondary-foreground: 0 0% 98%; /* Light secondary text */
+    --muted: 210 40% 25%; /* Slightly lighter dark gray */
+    --muted-foreground: 215.4 16.3% 56.9%; /* Lighter muted text */
     --accent: 231 69% 63%; /* Google Green */
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --accent-foreground: 0 0% 100%; /* White accent text */
+    --destructive: 0 62.8% 50.6%; /* Brighter destructive */
+    --destructive-foreground: 0 0% 98%; /* Light destructive text */
+    --border: 217.2 32.6% 27.5%; /* Slightly lighter border */
+    --input: 217.2 32.6% 27.5%; /* Slightly lighter input */
     --ring: 48 63% 51%; /* Google Blue */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -75,7 +76,7 @@ body {
     --sidebar-primary: 48 63% 51%;
     --sidebar-primary-foreground: 0 0% 10%;
     --sidebar-accent: 210 40% 20%;
-    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-accent-foreground: 0 0% 98%; /* Light accent foreground */
     --sidebar-border: 217.2 32.6% 17.5%;
     --sidebar-ring: 48 63% 51%;
   }
@@ -101,4 +102,37 @@ body {
   to {
     transform: translateX(0);
   }
+}
+
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Add other animations like page transitions if needed */
+/* Example page flip animation (conceptual) */
+.page-flip-enter {
+  transform: rotateY(-90deg);
+  transform-origin: left;
+  opacity: 0;
+}
+.page-flip-enter-active {
+  transform: rotateY(0deg);
+  opacity: 1;
+  transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
+}
+.page-flip-exit {
+  transform: rotateY(0deg);
+  transform-origin: right;
+  opacity: 1;
+}
+.page-flip-exit-active {
+  transform: rotateY(90deg);
+  opacity: 0;
+  transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
 }
