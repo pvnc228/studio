@@ -1,7 +1,11 @@
-import type {Metadata} from 'next';
-import {Geist, Geist_Mono} from 'next/font/google';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { UserProfileProvider } from '@/context/UserProfileContext';
+import { Toaster } from "@/components/ui/toaster";
+import { NavBar } from '@/components/NavBar'; // Импортируем NavBar
 
+// Настройка шрифтов
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -25,9 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {children}
+        <UserProfileProvider>
+          <NavBar /> {/* Используем NavBar */}
+          <main className="container mx-auto p-4">{children}</main>
+          <Toaster />
+        </UserProfileProvider>
       </body>
     </html>
   );
 }
-

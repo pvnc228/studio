@@ -33,3 +33,15 @@ model Place {
   rating        Float?
   mapsUrl String?
 }
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String // Хешированный пароль
+  firstName String?
+  lastName  String?
+  phone     String?
+  birthDate String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  searchHistory Json? // Храним историю поиска как JSON
+}
