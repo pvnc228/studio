@@ -1,3 +1,5 @@
+'use server'; // Указываем, что этот код работает на сервере
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -18,7 +20,7 @@ export async function getCities(): Promise<string[]> {
       'Кострома',
       'Ростов Великий',
       'Сергиев Посад',
-    ]; // Фallback на статические данные в случае ошибки
+    ]; // Fallback на статические данные
   } finally {
     await prisma.$disconnect();
   }
@@ -38,7 +40,7 @@ export async function getCategories(): Promise<string[]> {
       'Театр',
       'Отель',
       'Парк',
-    ]; // Fallback на статические данные в случае ошибки
+    ]; // Fallback на статические данные
   } finally {
     await prisma.$disconnect();
   }

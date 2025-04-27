@@ -10,19 +10,18 @@ const SuggestPlaceFromDescriptionInputSchema = z.object({
 });
 export type SuggestPlaceFromDescriptionInput = z.infer<typeof SuggestPlaceFromDescriptionInputSchema>;
 
-// Обновляем схему вывода, чтобы она соответствовала типу Place
 const SuggestPlaceFromDescriptionOutputSchema = z.array(
   z.object({
     id: z.number().describe('The ID of the place.'),
     name: z.string().describe('The name of the place.'),
-    categoryId: z.number().describe('The category ID of the place.'),
+    category: z.string().describe('The category name of the place.'),
     cityId: z.number().describe('The city ID of the place.'),
     description: z.string().describe('A short description of the place.'),
     imageUrl: z.string().describe('URL of an image for the place.'),
     dateFounded: z.string().nullable().describe('The founding date of the place.'),
     averagePrice: z.string().nullable().describe('The average price at the place.'),
     rating: z.number().nullable().describe('The rating of the place.'),
-    googleMapsUrl: z.string().nullable().describe('Google Maps URL of the place.'),
+    mapUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapUrl
   })
 ).describe('A list of suggested places.');
 
@@ -43,14 +42,14 @@ const prompt = ai.definePrompt({
         z.object({
           id: z.number().describe('The ID of the place.'),
           name: z.string().describe('The name of the place.'),
-          categoryId: z.number().describe('The category ID of the place.'),
+          category: z.string().describe('The category name of the place.'),
           cityId: z.number().describe('The city ID of the place.'),
           description: z.string().describe('A short description of the place.'),
           imageUrl: z.string().describe('URL of an image for the place.'),
           dateFounded: z.string().nullable().describe('The founding date of the place.'),
           averagePrice: z.string().nullable().describe('The average price at the place.'),
           rating: z.number().nullable().describe('The rating of the place.'),
-          googleMapsUrl: z.string().nullable().describe('Google Maps URL of the place.'),
+          mapUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapUrl
         })
       ).describe('A list of places to consider.'),
     }),

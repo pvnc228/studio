@@ -193,7 +193,7 @@ export const UserProfilePage = () => {
                          </div>
                        </div>
                        <Button variant="ghost" size="sm" asChild>
-                         <a href={place.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
+                         <a ref={place.mapUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
                            <MapPin className="h-3.5 w-3.5" />
                            Карта
                          </a>

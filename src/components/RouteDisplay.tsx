@@ -1,11 +1,10 @@
-
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import { Place } from "@/services/places";
-import { useUserProfile } from "@/context/UserProfileContext"; // Import context hook
+import { useUserProfile } from "@/context/UserProfileContext";
 import { useCallback } from "react";
 
 interface RouteDisplayProps {
@@ -14,29 +13,31 @@ interface RouteDisplayProps {
 
 const StarRating = ({ rating }: { rating: number }) => {
   const fullStars = Math.floor(rating);
-  const halfStar = rating % 1 >= 0.5; // Consider half stars if needed later
+  const halfStar = rating % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
   return (
     <div className="flex items-center" aria-label={`Рейтинг: ${rating} из 5 звезд`}>
       {Array.from({ length: fullStars }).map((_, index) => (
-        <svg key={`full-${index}`} className="w-5 h-5 text-yellow-400 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+        <svg key={`full-${index}`} className="w-5 h-5 text-yellow-400 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+        </svg>
       ))}
-      {/* Optional: Add half-star rendering logic if needed */}
       {Array.from({ length: emptyStars }).map((_, index) => (
-        <svg key={`empty-${index}`} className="w-5 h-5 text-gray-300 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+        <svg key={`empty-${index}`} className="w-5 h-5 text-gray-300 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+        </svg>
       ))}
     </div>
   );
 };
 
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
-  const { addToSearchHistory } = useUserProfile(); // Get the context function
+  const { addToSearchHistory } = useUserProfile();
 
   const handleMapLinkClick = useCallback((place: Place) => {
-    addToSearchHistory(place); // Add place to history when map link is clicked
+    addToSearchHistory(place);
   }, [addToSearchHistory]);
-
 
   return (
     <Card className="w-full shadow-lg rounded-xl border border-border bg-card mt-6">
@@ -47,21 +48,23 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
           {places.length > 0 ? (
             <ul className="space-y-6">
               {places.map((place) => (
-                <li key={place.name} className="p-5 border border-border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-background">
+                <li key={place.id} className="p-5 border border-border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-background">
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-3">
                     <img
-                      src={place.imageUrl || 'https://picsum.photos/150/150'} // Use placeholder if no image
+                      src={place.imageUrl || 'https://picsum.photos/150/150'}
                       alt={place.name}
                       width={150}
                       height={150}
                       className="w-full md:w-36 h-36 object-cover rounded-lg shadow-md flex-shrink-0"
+                      onError={(e) => (e.currentTarget.src = 'https://picsum.photos/150/150')}
                     />
                     <div className="flex-grow">
                       <h4 className="text-2xl font-bold text-foreground mb-1">{place.name}</h4>
-                      <p className="text-base text-muted-foreground capitalize">{place.categoryId}</p>
-                       {place.rating && (
+                      <p className="text-base text-muted-foreground capitalize">{place.category}</p>
+                      {place.rating && (
                         <div className="flex items-center mt-2">
-                          <span className="text-sm text-muted-foreground mr-2">Рейтинг:</span> <StarRating rating={place.rating} />
+                          <span className="text-sm text-muted-foreground mr-2">Рейтинг:</span>
+                          <StarRating rating={place.rating} />
                         </div>
                       )}
                     </div>
@@ -70,19 +73,19 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                   {place.dateFounded && <p className="text-sm text-muted-foreground mb-1"><strong>Дата основания:</strong> {place.dateFounded}</p>}
                   {place.averagePrice && <p className="text-sm text-muted-foreground mb-1"><strong>Средний чек:</strong> {place.averagePrice}</p>}
 
-                  {place.googleMapsUrl && (
-                     <Button
+                  {place.mapUrl && ( // Заменяем googleMapsUrl на mapUrl
+                    <Button
                       asChild
-                      variant="default" // Use default colorful button
-                      size="lg" // Make button large
+                      variant="default"
+                      size="lg"
                       className="mt-3 inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-200 ease-in-out hover:scale-105 shadow-md hover:shadow-lg"
-                      onClick={() => handleMapLinkClick(place)} // Call history function on click
+                      onClick={() => handleMapLinkClick(place)}
                     >
                       <a
-                        href={place.googleMapsUrl}
+                        href={place.mapUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={`Посмотреть ${place.name} на Яндекс Картах`}
+                        aria-label={`Посмотреть ${place.name} на карте`}
                       >
                         <MapPin className="h-5 w-5" />
                         Посмотреть на карте

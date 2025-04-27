@@ -6,8 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPlaces, Place } from "@/services/places";
 import { Button } from "@/components/ui/button";
-import { getCities, getCategories } from "@/constants/data"; // Импортируем функции
 import { Skeleton } from "@/components/ui/skeleton";
+
+// Функция для преобразования строки: первая буква заглавная, остальное без изменений
+const capitalize = (str: string) => {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 interface CitySelectionProps {
   onPlacesUpdate: (places: Place[]) => void;
@@ -21,13 +26,28 @@ export const CitySelection = ({ onPlacesUpdate }: CitySelectionProps) => {
   const [categories, setCategories] = useState<string[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
 
-  // Загружаем города и категории при монтировании компонента
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedCities = await getCities();
-      const fetchedCategories = await getCategories();
-      setCities(fetchedCities);
-      setCategories(fetchedCategories);
+      setDataLoading(true);
+      try {
+        const citiesResponse = await fetch('/api/cities');
+        if (!citiesResponse.ok) throw new Error('Не удалось загрузить города');
+        const fetchedCities = await citiesResponse.json();
+
+        const categoriesResponse = await fetch('/api/categories');
+        if (!categoriesResponse.ok) throw new Error('Не удалось загрузить категории');
+        const fetchedCategories = await categoriesResponse.json();
+
+        // Преобразуем города и категории для отображения с большой буквы
+        setCities(fetchedCities.map((city: string) => capitalize(city)));
+        setCategories(fetchedCategories.map((cat: string) => capitalize(cat)));
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        setCities([]);
+        setCategories([]);
+      } finally {
+        setDataLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -48,7 +68,7 @@ export const CitySelection = ({ onPlacesUpdate }: CitySelectionProps) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/places?city=${city}&category=${category}`);
+      const response = await fetch(`/api/places?city=${city.toLowerCase()}&category=${category.toLowerCase()}`);
       console.log('Отправка запроса с city:', city, 'и category:', category);
       if (!response.ok) {
         throw new Error('Не удалось получить данные');
@@ -80,7 +100,7 @@ export const CitySelection = ({ onPlacesUpdate }: CitySelectionProps) => {
             <SelectContent>
               {cities.map((ct) => (
                 <SelectItem key={ct} value={ct.toLowerCase()}>
-                  {ct}
+                  {ct} {/* Отображаем с большой буквы */}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -98,7 +118,7 @@ export const CitySelection = ({ onPlacesUpdate }: CitySelectionProps) => {
             <SelectContent>
               {categories.map((cat) => (
                 <SelectItem key={cat} value={cat.toLowerCase()}>
-                  {cat}
+                  {cat} {/* Отображаем с большой буквы */}
                 </SelectItem>
               ))}
             </SelectContent>

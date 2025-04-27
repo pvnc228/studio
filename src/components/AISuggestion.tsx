@@ -15,7 +15,13 @@ import {
 import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
 import { Place } from "@/services/places";
 import { Loader2 } from 'lucide-react';
-import { getCities, getCategories } from "@/constants/data"; // Импортируем функции
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Функция для преобразования строки: первая буква заглавная, остальное без изменений
+const capitalize = (str: string) => {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 interface AISuggestionProps {
   onPlacesUpdate: (places: Place[]) => void;
@@ -29,14 +35,30 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
   const [error, setError] = useState<string | null>(null);
   const [cities, setCities] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [dataLoading, setDataLoading] = useState(true);
 
-  // Загружаем города и категории при монтировании компонента
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedCities = await getCities();
-      const fetchedCategories = await getCategories();
-      setCities(fetchedCities);
-      setCategories(fetchedCategories);
+      setDataLoading(true);
+      try {
+        const citiesResponse = await fetch('/api/cities');
+        if (!citiesResponse.ok) throw new Error('Не удалось загрузить города');
+        const fetchedCities = await citiesResponse.json();
+
+        const categoriesResponse = await fetch('/api/categories');
+        if (!categoriesResponse.ok) throw new Error('Не удалось загрузить категории');
+        const fetchedCategories = await categoriesResponse.json();
+
+        // Преобразуем города и категории для отображения с большой буквы
+        setCities(fetchedCities.map((city: string) => capitalize(city)));
+        setCategories(fetchedCategories.map((cat: string) => capitalize(cat)));
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        setCities([]);
+        setCategories([]);
+      } finally {
+        setDataLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -72,33 +94,41 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="ai-city" className="mb-2 block font-medium text-foreground">Город</Label>
-            <Select onValueChange={setCity} value={city}>
-              <SelectTrigger id="ai-city" className="h-11 text-base">
-                <SelectValue placeholder="Выберите город" />
-              </SelectTrigger>
-              <SelectContent>
-                {cities.map((ct) => (
-                  <SelectItem key={ct} value={ct.toLowerCase()} className="text-base">
-                    {ct}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {dataLoading ? (
+              <Skeleton className="h-11 w-full" />
+            ) : (
+              <Select onValueChange={setCity} value={city}>
+                <SelectTrigger id="ai-city" className="h-11 text-base">
+                  <SelectValue placeholder="Выберите город" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cities.map((ct) => (
+                    <SelectItem key={ct} value={ct.toLowerCase()} className="text-base">
+                      {ct} {/* Отображаем с большой буквы */}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
           <div>
             <Label htmlFor="ai-category" className="mb-2 block font-medium text-foreground">Категория</Label>
-            <Select onValueChange={setCategory} value={category}>
-              <SelectTrigger id="ai-category" className="h-11 text-base">
-                <SelectValue placeholder="Выберите категорию" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat.toLowerCase()} className="text-base">
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {dataLoading ? (
+              <Skeleton className="h-11 w-full" />
+            ) : (
+              <Select onValueChange={setCategory} value={category}>
+                <SelectTrigger id="ai-category" className="h-11 text-base">
+                  <SelectValue placeholder="Выберите категорию" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat.toLowerCase()} className="text-base">
+                      {cat} {/* Отображаем с большой буквы */}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
 
