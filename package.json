@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
@@ -39,6 +39,7 @@
     "@react-google-maps/api": "^2.19.3",
     "@tanstack-query-firebase/react": "^1.0.5",
     "@tanstack/react-query": "^5.66.0",
+    "@prisma/client": "^5.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
@@ -58,6 +59,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "prisma": "^5.0.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "genkit-cli": "^1.0.4",
