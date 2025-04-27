@@ -25,9 +25,9 @@ export const PlaceList = ({ places }: PlaceListProps) => {
             <p><strong>Описание:</strong> {place.description}</p>
             <p><strong>Средняя цена:</strong> {place.averagePrice || 'Не указано'}</p>
             <p><strong>Рейтинг:</strong> {place.rating ? place.rating.toFixed(1) : 'Нет рейтинга'}</p>
-            {place.mapUrl && (
+            {place.mapsUrl && (
               <Button asChild>
-                <a href={place.mapUrl} target="_blank" rel="noopener noreferrer">
+                <a href={place.mapsUrl} target="_blank" rel="noopener noreferrer">
                   Посмотреть на карте
                 </a>
               </Button>

@@ -73,7 +73,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                   {place.dateFounded && <p className="text-sm text-muted-foreground mb-1"><strong>Дата основания:</strong> {place.dateFounded}</p>}
                   {place.averagePrice && <p className="text-sm text-muted-foreground mb-1"><strong>Средний чек:</strong> {place.averagePrice}</p>}
 
-                  {place.mapUrl && ( // Заменяем googleMapsUrl на mapUrl
+                  {place.mapsUrl && ( // Заменяем googleMapsUrl на mapsUrl
                     <Button
                       asChild
                       variant="default"
@@ -82,7 +82,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                       onClick={() => handleMapLinkClick(place)}
                     >
                       <a
-                        href={place.mapUrl}
+                        href={place.mapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`Посмотреть ${place.name} на карте`}

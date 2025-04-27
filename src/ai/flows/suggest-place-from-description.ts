@@ -21,7 +21,7 @@ const SuggestPlaceFromDescriptionOutputSchema = z.array(
     dateFounded: z.string().nullable().describe('The founding date of the place.'),
     averagePrice: z.string().nullable().describe('The average price at the place.'),
     rating: z.number().nullable().describe('The rating of the place.'),
-    mapUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapUrl
+    mapsUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapsUrl
   })
 ).describe('A list of suggested places.');
 
@@ -49,7 +49,7 @@ const prompt = ai.definePrompt({
           dateFounded: z.string().nullable().describe('The founding date of the place.'),
           averagePrice: z.string().nullable().describe('The average price at the place.'),
           rating: z.number().nullable().describe('The rating of the place.'),
-          mapUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapUrl
+          mapsUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapsUrl
         })
       ).describe('A list of places to consider.'),
     }),

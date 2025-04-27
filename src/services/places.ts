@@ -14,7 +14,7 @@ export type Place = {
   dateFounded: string | null;
   averagePrice: string | null;
   rating: number | null;
-  mapUrl: string | null; // Заменяем googleMapsUrl на mapUrl
+  mapsUrl: string | null; // Заменяем googleMapsUrl на mapsUrl
 };
 
 export async function getPlaces(city: string, category: string): Promise<Place[]> {
@@ -50,7 +50,7 @@ export async function getPlaces(city: string, category: string): Promise<Place[]
       dateFounded: place.dateFounded,
       averagePrice: place.averagePrice,
       rating: place.rating,
-      mapUrl: place.mapUrl, // Заменяем googleMapsUrl на mapUrl
+      mapsUrl: place.mapsUrl, // Заменяем googleMapsUrl на mapsUrl
     }));
   } catch (error) {
     console.error('Ошибка при получении мест из базы данных:', error);
