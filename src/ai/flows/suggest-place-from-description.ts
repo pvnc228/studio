@@ -21,10 +21,6 @@ export type SuggestPlaceFromDescriptionInput = z.infer<typeof SuggestPlaceFromDe
 const SuggestPlaceFromDescriptionOutputSchema = z.array(z.object({
   name: z.string().describe('The name of the place.'),
   category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-  location: z.object({
-    lat: z.number().describe('The latitude of the location.'),
-    lng: z.number().describe('The longitude of the location.'),
-  }).describe('The location of the place.'),
   description: z.string().describe('A short description of the place.'),
   imageUrl: z.string().describe('URL of an image for the place'),
 })).describe('A list of suggested places.');
@@ -46,10 +42,6 @@ const prompt = ai.definePrompt({
       places: z.array(z.object({
         name: z.string().describe('The name of the place.'),
         category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-        location: z.object({
-          lat: z.number().describe('The latitude of the location.'),
-          lng: z.number().describe('The longitude of the location.'),
-        }).describe('The location of the place.'),
         description: z.string().describe('A short description of the place.'),
         imageUrl: z.string().describe('URL of an image for the place'),
       })).describe('A list of places to consider.'),
@@ -59,10 +51,6 @@ const prompt = ai.definePrompt({
     schema: z.array(z.object({
       name: z.string().describe('The name of the place.'),
       category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-      location: z.object({
-        lat: z.number().describe('The latitude of the location.'),
-        lng: z.number().describe('The longitude of the location.'),
-      }).describe('The location of the place.'),
       description: z.string().describe('A short description of the place.'),
       imageUrl: z.string().describe('URL of an image for the place'),
     })).describe('A list of suggested places.'),
