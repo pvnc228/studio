@@ -1,20 +1,13 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Включаем режим standalone для поддержки SSR и API маршрутов на Firebase
-  output: 'standalone',
-
-  // Игнорировать ошибки TypeScript при сборке
+  output: 'standalone', // Для SSR и API маршрутов
   typescript: {
     ignoreBuildErrors: true,
   },
-
-  // Игнорировать ошибки ESLint при сборке
   eslint: {
     ignoreDuringBuilds: true,
   },
-
-  // Настройка для загрузки удалённых изображений
   images: {
     remotePatterns: [
       {
@@ -31,13 +24,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
-  // Переменные окружения для клиента
   env: {
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   },
-
-
+  
 };
 
 export default nextConfig;
