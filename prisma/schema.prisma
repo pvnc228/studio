@@ -26,8 +26,6 @@ model Place {
   category      Category @relation(fields: [categoryId], references: [id])
   cityId        Int
   city          City     @relation(fields: [cityId], references: [id])
-  lat           Float
-  lng           Float
   description   String
   imageUrl      String
   dateFounded   String?
