@@ -58,7 +58,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                     />
                     <div className="flex-grow">
                       <h4 className="text-2xl font-bold text-foreground mb-1">{place.name}</h4>
-                      <p className="text-base text-muted-foreground capitalize">{place.category}</p>
+                      <p className="text-base text-muted-foreground capitalize">{place.categoryId}</p>
                        {place.rating && (
                         <div className="flex items-center mt-2">
                           <span className="text-sm text-muted-foreground mr-2">Рейтинг:</span> <StarRating rating={place.rating} />

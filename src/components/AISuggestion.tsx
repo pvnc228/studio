@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,8 @@ import {
 } from "@/components/ui/select";
 import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
 import { Place } from "@/services/places";
-import { Loader2 } from 'lucide-react'; // Import loader icon
+import { Loader2 } from 'lucide-react';
+import { getCities, getCategories } from "@/constants/data"; // Импортируем функции
 
 interface AISuggestionProps {
   onPlacesUpdate: (places: Place[]) => void;
@@ -25,47 +25,39 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
   const [category, setCategory] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [cities, setCities] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
-  const cities = [
-    'Москва',
-    'Санкт-Петербург',
-    'Суздаль',
-    'Владимир',
-    'Ярославль',
-    'Кострома',
-    'Ростов Великий',
-    'Сергиев Посад'
-  ];
-
-  const categories = [
-    'Ресторан',
-    'Кафе',
-    'Бар',
-    'Кинотеатр',
-    'Театр',
-    'Отель',
-    'Парк',
-  ];
+  // Загружаем города и категории при монтировании компонента
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedCities = await getCities();
+      const fetchedCategories = await getCategories();
+      setCities(fetchedCities);
+      setCategories(fetchedCategories);
+    };
+    fetchData();
+  }, []);
 
   const handleSuggestion = async () => {
-    setError(null); // Reset error
+    setError(null);
     if (!city || !description || !category) {
       setError('Пожалуйста, выберите город, введите описание и выберите категорию.');
       return;
     }
 
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
     try {
       const places = await suggestPlaceFromDescription({ city: city.toLowerCase(), description, category: category.toLowerCase() });
-      onPlacesUpdate(places); // Notify the parent component about the new places
+      onPlacesUpdate(places);
     } catch (error) {
       console.error("Ошибка при предложении мест:", error);
       setError('Не удалось получить предложения мест. Пожалуйста, попробуйте еще раз.');
-      onPlacesUpdate([]); // Clear places on error
+      onPlacesUpdate([]);
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
@@ -110,7 +102,6 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
           </div>
         </div>
 
-
         <div>
           <Label htmlFor="ai-description" className="mb-2 block font-medium text-foreground">Описание</Label>
           <Input
@@ -127,7 +118,7 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
         <Button
           onClick={handleSuggestion}
           disabled={isLoading}
-          size="lg" // Use large button size
+          size="lg"
           className="w-full flex items-center justify-center gap-2 transition-all duration-300 ease-in-out hover:scale-[1.02]"
         >
           {isLoading ? (
@@ -139,7 +130,6 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
             'Предложить Места'
           )}
         </Button>
-
       </CardContent>
     </Card>
   );
