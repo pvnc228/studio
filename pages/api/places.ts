@@ -31,7 +31,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const formattedPlaces = places.map(place => ({
       name: place.name,
       category: place.category.name,
-      location: { lat: place.lat, lng: place.lng },
       description: place.description,
       imageUrl: place.imageUrl,
       dateFounded: place.dateFounded,
