@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {useState, useEffect, useCallback} from 'react';
-import {Place} from '@/services/mockPlaces';
+import {Place} from '@/services/places';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import {Button} from '@/components/ui/button';

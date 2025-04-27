@@ -1,15 +1,7 @@
 'use server';
-/**
- * @fileOverview An AI agent that suggests places based on a textual description.
- *
- * - suggestPlaceFromDescription - A function that handles the place suggestion process.
- * - SuggestPlaceFromDescriptionInput - The input type for the suggestPlaceFromDescription function.
- * - SuggestPlaceFromDescriptionOutput - The return type for the suggestPlaceFromDescription function.
- */
-
-import {ai} from '@/ai/ai-instance';
-import {z} from 'genkit';
-import {getPlaces, Place} from '@/services/mockPlaces';
+import { ai } from '@/ai/ai-instance';
+import { z } from 'genkit';
+import { getPlaces, Place } from '@/services/places';
 
 const SuggestPlaceFromDescriptionInputSchema = z.object({
   city: z.string().describe('The city to search for places in.'),
@@ -18,13 +10,21 @@ const SuggestPlaceFromDescriptionInputSchema = z.object({
 });
 export type SuggestPlaceFromDescriptionInput = z.infer<typeof SuggestPlaceFromDescriptionInputSchema>;
 
-const SuggestPlaceFromDescriptionOutputSchema = z.array(z.object({
-  name: z.string().describe('The name of the place.'),
-  category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-  description: z.string().describe('A short description of the place.'),
-  imageUrl: z.string().describe('URL of an image for the place'),
-})).describe('A list of suggested places.');
-
+// Обновляем схему вывода, чтобы она соответствовала типу Place
+const SuggestPlaceFromDescriptionOutputSchema = z.array(
+  z.object({
+    id: z.number().describe('The ID of the place.'),
+    name: z.string().describe('The name of the place.'),
+    categoryId: z.number().describe('The category ID of the place.'),
+    cityId: z.number().describe('The city ID of the place.'),
+    description: z.string().describe('A short description of the place.'),
+    imageUrl: z.string().describe('URL of an image for the place.'),
+    dateFounded: z.string().nullable().describe('The founding date of the place.'),
+    averagePrice: z.string().nullable().describe('The average price at the place.'),
+    rating: z.number().nullable().describe('The rating of the place.'),
+    googleMapsUrl: z.string().nullable().describe('Google Maps URL of the place.'),
+  })
+).describe('A list of suggested places.');
 
 export type SuggestPlaceFromDescriptionOutput = z.infer<typeof SuggestPlaceFromDescriptionOutputSchema>;
 
@@ -39,21 +39,24 @@ const prompt = ai.definePrompt({
       city: z.string().describe('The city to search for places in.'),
       description: z.string().describe('The description of the desired place.'),
       category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-      places: z.array(z.object({
-        name: z.string().describe('The name of the place.'),
-        category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-        description: z.string().describe('A short description of the place.'),
-        imageUrl: z.string().describe('URL of an image for the place'),
-      })).describe('A list of places to consider.'),
+      places: z.array(
+        z.object({
+          id: z.number().describe('The ID of the place.'),
+          name: z.string().describe('The name of the place.'),
+          categoryId: z.number().describe('The category ID of the place.'),
+          cityId: z.number().describe('The city ID of the place.'),
+          description: z.string().describe('A short description of the place.'),
+          imageUrl: z.string().describe('URL of an image for the place.'),
+          dateFounded: z.string().nullable().describe('The founding date of the place.'),
+          averagePrice: z.string().nullable().describe('The average price at the place.'),
+          rating: z.number().nullable().describe('The rating of the place.'),
+          googleMapsUrl: z.string().nullable().describe('Google Maps URL of the place.'),
+        })
+      ).describe('A list of places to consider.'),
     }),
   },
   output: {
-    schema: z.array(z.object({
-      name: z.string().describe('The name of the place.'),
-      category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-      description: z.string().describe('A short description of the place.'),
-      imageUrl: z.string().describe('URL of an image for the place'),
-    })).describe('A list of suggested places.'),
+    schema: SuggestPlaceFromDescriptionOutputSchema,
   },
   prompt: `Ты - полезный AI-помощник, который предлагает места на основе описания пользователя.
 
@@ -63,7 +66,7 @@ const prompt = ai.definePrompt({
 Вот список мест в этом городе и категории:
 
 {{#each places}}
-- Название: {{name}}, Описание: {{description}}
+- Название: {{name}}, Описание: {{description}}, Средняя цена: {{averagePrice}}, Рейтинг: {{rating}}
 {{/each}}
 
 Основываясь на описании пользователя, предложите места, которые лучше всего соответствуют их потребностям.
@@ -81,6 +84,6 @@ const suggestPlaceFromDescriptionFlow = ai.defineFlow<
   outputSchema: SuggestPlaceFromDescriptionOutputSchema,
 }, async (input) => {
   const places = await getPlaces(input.city, input.category);
-  const {output} = await prompt({...input, places});
+  const { output } = await prompt({ ...input, places });
   return output!;
 });

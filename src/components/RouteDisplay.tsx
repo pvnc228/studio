@@ -4,7 +4,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
-import { Place } from "@/services/mockPlaces";
+import { Place } from "@/services/places";
 import { useUserProfile } from "@/context/UserProfileContext"; // Import context hook
 import { useCallback } from "react";
 

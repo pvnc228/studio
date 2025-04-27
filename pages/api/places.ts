@@ -1,48 +1,18 @@
-import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-const prisma = new PrismaClient();
+import { getPlaces, Place } from '@/services/places';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { city, category } = req.query;
 
-  // Проверяем, что параметры переданы
-  if (!city || !category) {
-    return res.status(400).json({ error: 'City and category are required' });
+  if (!city || !category || typeof city !== 'string' || typeof category !== 'string') {
+    return res.status(400).json({ error: 'Город и категория обязательны' });
   }
 
   try {
-    // Выполняем запрос к базе данных через Prisma
-    const places = await prisma.place.findMany({
-      where: {
-        city: {
-          name: city.toString().toLowerCase(),
-        },
-        category: {
-          name: category.toString().toLowerCase(),
-        },
-      },
-      include: {
-        category: true,
-      },
-    });
-
-    // Форматируем данные для фронтенда
-    const formattedPlaces = places.map(place => ({
-      name: place.name,
-      category: place.category.name,
-      description: place.description,
-      imageUrl: place.imageUrl,
-      dateFounded: place.dateFounded,
-      averagePrice: place.averagePrice,
-      rating: place.rating,
-      googleMapsUrl: place.googleMapsUrl,
-    }));
-
-    // Отправляем успешный ответ
-    res.status(200).json(formattedPlaces);
+    const places = await getPlaces(city.toLowerCase(), category.toLowerCase());
+    res.status(200).json(places);
   } catch (error) {
-    console.error('Ошибка при получении мест:', error);
-    res.status(500).json({ error: 'Не удалось получить места' });
+    console.error('Ошибка в API /places:', error);
+    res.status(500).json({ error: 'Не удалось загрузить места' });
   }
 }
