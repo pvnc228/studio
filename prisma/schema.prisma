@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model City {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
+}
+
+model Category {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
+}
+
+model Place {
+  id            Int      @id @default(autoincrement())
+  name          String
+  categoryId    Int
+  category      Category @relation(fields: [categoryId], references: [id])
+  cityId        Int
+  city          City     @relation(fields: [cityId], references: [id])
+  lat           Float
+  lng           Float
+  description   String
+  imageUrl      String
+  dateFounded   String?
+  averagePrice  String?
+  rating        Float?
+  googleMapsUrl String?
+}

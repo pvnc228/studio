@@ -1,65 +1,52 @@
+import { PrismaClient } from '@prisma/client';
 
-/**
- * Представляет географическое местоположение.
- */
+const prisma = new PrismaClient();
+
 export interface Location {
-  /**
-   * Широта местоположения.
-   */
   lat: number;
-  /**
-   * Долгота местоположения.
-   */
   lng: number;
 }
 
-/**
- * Представляет информацию о месте, таком как ресторан, кафе или отель.
- */
 export interface Place {
-  /**
-   * Название места.
-   */
   name: string;
-  /**
-   * Категория места (например, ресторан, кафе, отель).
-   */
   category: string;
-  /**
-   * Местоположение места.
-   */
   location: Location;
-  /**
-   * Краткое описание места.
-   */
   description: string;
-  /**
-   * URL изображения для места
-   */
   imageUrl: string;
-
-  /**
-   * Дата основания места
-   */
   dateFounded?: string;
-
-  /**
-   * Средняя цена за услуги
-   */
   averagePrice?: string;
-
-  /**
-   * Рейтинг места
-   */
   rating?: number;
-
-  /**
-   * URL на Google Maps для места
-   */
   googleMapsUrl?: string;
 }
 
-const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
+export async function getPlaces(city: string, category: string): Promise<Place[]> {
+  const places = await prisma.place.findMany({
+    where: {
+      city: {
+        name: city.toLowerCase(),
+      },
+      category: {
+        name: category.toLowerCase(),
+      },
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  return places.map(place => ({
+    name: place.name,
+    category: place.category.name,
+    location: { lat: place.lat, lng: place.lng },
+    description: place.description,
+    imageUrl: place.imageUrl,
+    dateFounded: place.dateFounded ?? undefined,
+    averagePrice: place.averagePrice ?? undefined,
+    rating: place.rating ?? undefined,
+    googleMapsUrl: place.googleMapsUrl ?? undefined,
+  }));
+}
+export const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
   'москва': {
     'ресторан': [
       {
@@ -1009,19 +996,4 @@ const mockDatabase: { [city: string]: { [category: string]: Place[] } } = {
  * @param category Категория мест для извлечения.
  * @returns Promise, который разрешается в массив объектов Place.
  */
-export async function getPlaces(city: string, category: string): Promise<Place[]> {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  const cityData = mockDatabase[city.toLowerCase()];
-  if (cityData) {
-    const categoryData = cityData[category.toLowerCase()];
-    if (categoryData) {
-      return categoryData;
-    }
-  }
-
-  // Return empty array if city or category not found
-  return [];
-}
 

@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/ai-instance';
 import {z} from 'genkit';
-import {getPlaces, Place} from '@/services/places';
+import {getPlaces, Place} from '@/services/mockPlaces';
 
 const SuggestPlaceFromDescriptionInputSchema = z.object({
   city: z.string().describe('The city to search for places in.'),

@@ -1,7 +1,7 @@
 
 "use client";
 
-import type { Place } from '@/services/places';
+import type { Place } from '@/services/mockPlaces';
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 interface UserProfile {

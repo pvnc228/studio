@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
-import { Place } from "@/services/places";
+import { Place } from "@/services/mockPlaces";
 import { Loader2 } from 'lucide-react'; // Import loader icon
 
 interface AISuggestionProps {
