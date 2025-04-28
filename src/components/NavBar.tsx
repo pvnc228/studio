@@ -17,12 +17,12 @@ export function NavBar() {
         <div className="space-x-4">
           {userProfile ? (
             <>
-              <Link href="/profile" className={pathname === '/profile' ? 'underline' : ''}>
+              {/* <Link href="/profile" className={pathname === '/profile' ? 'underline' : ''}>
                 Профиль
-              </Link>
-              <button onClick={logout} className="hover:underline">
+              </Link> */}
+              {/* <button onClick={logout} className="hover:underline">
                 Выйти
-              </button>
+              </button> */}
             </>
           ) : (
             <>

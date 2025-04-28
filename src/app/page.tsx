@@ -1,12 +1,11 @@
-
 "use client";
 
-import {CategorySelection} from '@/components/CategorySelection';
-import {CitySelection} from '@/components/CitySelection';
-import {RouteDisplay} from '@/components/RouteDisplay';
-import {AISuggestion} from '@/components/AISuggestion';
-import {WelcomeScreen} from '@/components/WelcomeScreen';
-import {UserProfilePage} from '@/components/UserProfilePage'; // Import UserProfilePage
+import { CategorySelection } from '@/components/CategorySelection';
+import { CitySelection } from '@/components/CitySelection';
+import { RouteDisplay } from '@/components/RouteDisplay';
+import { AISuggestion } from '@/components/AISuggestion';
+import { WelcomeScreen } from '@/components/WelcomeScreen';
+import { UserProfilePage } from '@/components/UserProfilePage';
 import {
   Card,
   CardContent,
@@ -14,27 +13,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {useState, useEffect, useCallback} from 'react';
-import {Place} from '@/services/places';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {Button} from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { useState, useEffect, useCallback } from 'react';
+import { Place } from '@/services/places';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'; // Import Dialog components
-import {cn} from '@/lib/utils';
-import {Settings, Sun, Moon, User} from 'lucide-react'; // Import User icon
-import {UserProfileProvider, useUserProfile} from '@/context/UserProfileContext';
+} from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
+import { Sun, Moon } from 'lucide-react';
+import { UserProfileProvider, useUserProfile } from '@/context/UserProfileContext';
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -73,7 +66,7 @@ function ThemeToggle() {
 }
 
 function ProfileMenu() {
-  const {userProfile} = useUserProfile();
+  const { userProfile } = useUserProfile();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const getInitials = () => {
@@ -84,37 +77,19 @@ function ProfileMenu() {
 
   return (
     <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="relative h-10 w-10 rounded-full transition-transform duration-300 ease-in-out hover:scale-110"
-          >
-            <Avatar className="h-10 w-10 border-2 border-primary">
-              {/* Add AvatarImage if you have profile pictures */}
-              {/* <AvatarImage src="/avatars/01.png" alt="@shadcn" /> */}
-              <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                {getInitials()}
-              </AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DialogTrigger asChild>
-            <DropdownMenuItem className="cursor-pointer">
-              <User className="mr-2 h-4 w-4" />
-              <span>Профиль</span>
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Настройки</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <span>Выйти</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <DialogTrigger asChild>
+        <Button
+          variant="ghost"
+          className="relative h-10 w-10 rounded-full transition-transform duration-300 ease-in-out hover:scale-110"
+        >
+          <Avatar className="h-10 w-10 border-2 border-primary">
+            <AvatarImage src="/avatars/01.png" alt="@shadcn" />
+            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+              {getInitials()}
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle>Профиль пользователя</DialogTitle>
@@ -126,7 +101,7 @@ function ProfileMenu() {
 }
 
 function MainPageContent() {
-  const { userProfile } = useUserProfile();
+  const { userProfile, isFirstLogin, setIsFirstLogin } = useUserProfile();
   const [places, setPlaces] = useState<Place[]>([]);
   const [activeTab, setActiveTab] = useState('manual');
 
@@ -136,8 +111,15 @@ function MainPageContent() {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+    setIsFirstLogin(false); // Сбрасываем флаг после выбора вкладки
   };
 
+  // Показываем WelcomeScreen, если это первый вход после логина
+  if (isFirstLogin) {
+    return <WelcomeScreen onTabChange={handleTabChange} />;
+  }
+
+  // Если пользователь не авторизован или у него нет имени, также показываем WelcomeScreen
   const isNewUser = !userProfile?.firstName;
 
   if (isNewUser) {

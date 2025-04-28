@@ -2,6 +2,7 @@
 
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { Place } from '@/services/places';
+import { useRouter } from 'next/navigation';
 
 interface UserProfile {
   id: number;
@@ -22,6 +23,8 @@ interface UserProfileContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
+  isFirstLogin: boolean; // Новый флаг
+  setIsFirstLogin: (value: boolean) => void; // Метод для управления флагом
 }
 
 const UserProfileContext = createContext<UserProfileContextType | undefined>(undefined);
@@ -30,8 +33,8 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isFirstLogin, setIsFirstLogin] = useState(false); // Инициализируем флаг
 
-  // Загружаем токен из localStorage при инициализации
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
@@ -71,6 +74,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
       setToken(data.token);
       localStorage.setItem('token', data.token);
       await fetchUserProfile(data.token);
+      setIsFirstLogin(true); // Устанавливаем флаг после успешного логина
     } catch (error) {
       console.error('Ошибка при входе:', error);
       throw error;
@@ -81,6 +85,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
     setUserProfile(null);
     setToken(null);
     localStorage.removeItem('token');
+    setIsFirstLogin(false); // Сбрасываем флаг при выходе
   };
 
   const updateUserProfile = async (profileData: Partial<UserProfile>) => {
@@ -143,7 +148,18 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   return (
     <UserProfileContext.Provider
-      value={{ userProfile, token, updateUserProfile, addToSearchHistory, clearSearchHistory, login, logout, loading }}
+      value={{
+        userProfile,
+        token,
+        updateUserProfile,
+        addToSearchHistory,
+        clearSearchHistory,
+        login,
+        logout,
+        loading,
+        isFirstLogin,
+        setIsFirstLogin,
+      }}
     >
       {children}
     </UserProfileContext.Provider>
