@@ -104,7 +104,7 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
                 <SelectContent>
                   {cities.map((ct) => (
                     <SelectItem key={ct} value={ct.toLowerCase()} className="text-base">
-                      {ct} {/* Отображаем с большой буквы */}
+                      {ct} 
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -123,7 +123,7 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
                 <SelectContent>
                   {categories.map((cat) => (
                     <SelectItem key={cat} value={cat.toLowerCase()} className="text-base">
-                      {cat} {/* Отображаем с большой буквы */}
+                      {cat} 
                     </SelectItem>
                   ))}
                 </SelectContent>

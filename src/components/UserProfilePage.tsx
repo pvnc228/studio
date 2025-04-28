@@ -59,7 +59,7 @@ export const UserProfilePage = () => {
         birthDate: userProfile.birthDate || '',
       });
     } else if (!loading) {
-      router.push('/login'); // Перенаправляем на страницу входа, если пользователь не авторизован
+      router.push('/login'); 
     }
   }, [userProfile, form, loading, router]);
 
@@ -83,7 +83,7 @@ export const UserProfilePage = () => {
   }
 
   if (!userProfile) {
-    return null; // Перенаправление уже обработано в useEffect
+    return null; 
   }
 
   return (

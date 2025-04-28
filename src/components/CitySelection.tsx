@@ -100,7 +100,7 @@ export const CitySelection = ({ onPlacesUpdate }: CitySelectionProps) => {
             <SelectContent>
               {cities.map((ct) => (
                 <SelectItem key={ct} value={ct.toLowerCase()}>
-                  {ct} {/* Отображаем с большой буквы */}
+                  {ct} 
                 </SelectItem>
               ))}
             </SelectContent>
@@ -118,7 +118,7 @@ export const CitySelection = ({ onPlacesUpdate }: CitySelectionProps) => {
             <SelectContent>
               {categories.map((cat) => (
                 <SelectItem key={cat} value={cat.toLowerCase()}>
-                  {cat} {/* Отображаем с большой буквы */}
+                  {cat} 
                 </SelectItem>
               ))}
             </SelectContent>

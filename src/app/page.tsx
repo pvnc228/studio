@@ -111,15 +111,15 @@ function MainPageContent() {
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    setIsFirstLogin(false); // Сбрасываем флаг после выбора вкладки
+    setIsFirstLogin(false); 
   };
 
-  // Показываем WelcomeScreen, если это первый вход после логина
+  
   if (isFirstLogin) {
     return <WelcomeScreen onTabChange={handleTabChange} />;
   }
 
-  // Если пользователь не авторизован или у него нет имени, также показываем WelcomeScreen
+  
   const isNewUser = !userProfile?.firstName;
 
   if (isNewUser) {

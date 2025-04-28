@@ -1,4 +1,4 @@
-"use client"; // Добавляем директиву "use client", так как используем хуки
+"use client";
 
 import Link from 'next/link';
 import { useUserProfile } from '@/context/UserProfileContext';

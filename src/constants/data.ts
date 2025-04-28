@@ -1,10 +1,10 @@
-'use server'; // Указываем, что этот код работает на сервере
+'use server'; 
 
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Функции для получения городов и категорий из базы данных
+
 export async function getCities(): Promise<string[]> {
   try {
     const cities = await prisma.city.findMany();
@@ -20,7 +20,7 @@ export async function getCities(): Promise<string[]> {
       'Кострома',
       'Ростов Великий',
       'Сергиев Посад',
-    ]; // Fallback на статические данные
+    ]; 
   } finally {
     await prisma.$disconnect();
   }
@@ -40,7 +40,7 @@ export async function getCategories(): Promise<string[]> {
       'Театр',
       'Отель',
       'Парк',
-    ]; // Fallback на статические данные
+    ]; 
   } finally {
     await prisma.$disconnect();
   }

@@ -12,16 +12,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Проверяем, существует ли пользователь
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json({ message: 'Пользователь с таким email уже существует' }, { status: 400 });
     }
 
-    // Хешируем пароль
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Создаём пользователя
+    
     const user = await prisma.user.create({
       data: {
         email,

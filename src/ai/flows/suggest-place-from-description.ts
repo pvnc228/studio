@@ -49,7 +49,7 @@ const prompt = ai.definePrompt({
           dateFounded: z.string().nullable().describe('The founding date of the place.'),
           averagePrice: z.string().nullable().describe('The average price at the place.'),
           rating: z.number().nullable().describe('The rating of the place.'),
-          mapsUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapsUrl
+          mapsUrl: z.string().nullable().describe('Map URL of the place.'), 
         })
       ).describe('A list of places to consider.'),
     }),
