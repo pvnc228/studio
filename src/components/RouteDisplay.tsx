@@ -2,9 +2,10 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin } from "lucide-react";
+import { MapPin, Heart, HeartOff } from "lucide-react";
 import { Place } from "@/services/places";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { useFavorites } from "@/hooks/useFavorites";
 import { useCallback } from "react";
 
 interface RouteDisplayProps {
@@ -33,11 +34,39 @@ const StarRating = ({ rating }: { rating: number }) => {
 };
 
 export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
-  const { addToSearchHistory } = useUserProfile();
+  const { userProfile, addToSearchHistory } = useUserProfile();
+  const userId = userProfile?.id;
+
+  const {
+    favorites,
+    addFavorite,
+    removeFavorite,
+  } = useFavorites(userId);
 
   const handleMapLinkClick = useCallback((place: Place) => {
     addToSearchHistory(place);
   }, [addToSearchHistory]);
+
+  const isFavorite = useCallback(
+    (id: number) => 
+      favorites.some(fav => fav?.id === id), // Используем опциональную цепочку
+    [favorites]
+  );
+
+  const toggleFavorite = useCallback(
+    (place: Place) => {
+      if (!userId) return;
+
+      if (isFavorite(place.id)) {
+        removeFavorite(place.id.toString());
+      } else {
+        addFavorite(place);
+      }
+    },
+    [userId, isFavorite, addFavorite, removeFavorite]
+  );
+
+
 
   return (
     <Card className="w-full shadow-lg rounded-xl border border-border bg-card mt-6">
@@ -48,7 +77,20 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
           {places.length > 0 ? (
             <ul className="space-y-6">
               {places.map((place) => (
-                <li key={place.id} className="p-5 border border-border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-background">
+                <li key={place.id} className="relative p-5 border border-border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out bg-background">
+                  {/* Кнопка избранного */}
+                  {place.id !== undefined && (
+                <button
+                  onClick={() => toggleFavorite(place)}
+                  aria-label={isFavorite(place.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
+                >
+                  {isFavorite(place.id) ? (
+                    <Heart className="text-red-500 w-6 h-6" />
+                  ) : (
+                    <HeartOff className="text-gray-400 w-6 h-6" />
+                  )}
+                </button>
+                  )}
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-3">
                     <img
                       src={place.imageUrl || 'https://picsum.photos/150/150'}
@@ -73,7 +115,7 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                   {place.dateFounded && <p className="text-sm text-muted-foreground mb-1"><strong>Дата основания:</strong> {place.dateFounded}</p>}
                   {place.averagePrice && <p className="text-sm text-muted-foreground mb-1"><strong>Средний чек:</strong> {place.averagePrice}</p>}
 
-                  {place.mapsUrl && ( // Заменяем googleMapsUrl на mapsUrl
+                  {place.mapsUrl && (
                     <Button
                       asChild
                       variant="default"

@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
+import { useFavorites } from "@/hooks/useFavorites";
 import {
     Form,
     FormControl,
@@ -30,6 +31,7 @@ const profileSchema = z.object({
     email: z.string().email("Неверный формат email").or(z.literal("")),
     birthDate: z.string().optional(),
 });
+
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
@@ -48,6 +50,12 @@ export const UserProfilePage = () => {
       birthDate: userProfile?.birthDate || '',
     },
   });
+  const userId = userProfile?.id;
+  const { 
+    favorites, 
+    removeFavorite, 
+    fetchFavorites 
+  } = useFavorites(userId); 
 
   React.useEffect(() => {
     if (userProfile) {
@@ -85,6 +93,18 @@ export const UserProfilePage = () => {
   if (!userProfile) {
     return null; 
   }
+  const handleRemoveFavorite = async (placeId: string) => {
+    try {
+      await removeFavorite(placeId);
+      toast({ title: "Успех", description: "Место удалено из избранного" });
+    } catch (error) {
+      toast({ 
+        title: "Ошибка", 
+        description: "Не удалось удалить из избранного", 
+        variant: "destructive" 
+      });
+    }
+  };
 
   return (
     <div className="space-y-6 p-1">
@@ -249,6 +269,73 @@ export const UserProfilePage = () => {
           ) : (
             <p className="text-muted-foreground text-center py-4">История поиска пуста.</p>
           )}
+          <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Избранное</CardTitle>
+              <CardDescription>Места, которые вы добавили в избранное.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {favorites.length > 0 ? (
+            <ScrollArea className="h-[300px] w-full rounded-md border p-4">
+              <ul className="space-y-4">
+                {favorites.map((place, index) => (
+                  <React.Fragment key={place.id}>
+                    <li className="flex items-center justify-between gap-4 text-sm">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <img
+                          src={place.imageUrl || 'https://picsum.photos/40/40'}
+                          alt={place.name}
+                          width={40}
+                          height={40}
+                          className="w-10 h-10 object-cover rounded-md flex-shrink-0"
+                          onError={(e) => (e.currentTarget.src = 'https://picsum.photos/40/40')}
+                        />
+                        <div className="flex-grow min-w-0">
+                          <p className="font-medium truncate text-foreground">{place.name}</p>
+                          <p className="text-xs text-muted-foreground capitalize truncate">{place.category}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          asChild 
+                          onClick={() => handleRemoveFavorite(place.id.toString())}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          Удалить
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          asChild
+                        >
+                          <a 
+                            href={place.mapsUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-primary hover:underline inline-flex items-center gap-1"
+                          >
+                            <MapPin className="h-3.5 w-3.5" />
+                            Карта
+                          </a>
+                        </Button>
+                      </div>
+                    </li>
+                    {index < favorites.length - 1 && <Separator />}
+                  </React.Fragment>
+                ))}
+              </ul>
+            </ScrollArea>
+          ) : (
+            <p className="text-muted-foreground text-center py-4">Избранное пусто.</p>
+          )}
+        </CardContent>
+      </Card>
         </CardContent>
       </Card>
     </div>

@@ -1,3 +1,4 @@
+// schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,28 +21,42 @@ model Category {
 }
 
 model Place {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   name          String
   categoryId    Int
-  category      Category @relation(fields: [categoryId], references: [id])
+  category      Category  @relation(fields: [categoryId], references: [id])
   cityId        Int
-  city          City     @relation(fields: [cityId], references: [id])
+  city          City      @relation(fields: [cityId], references: [id])
   description   String
   imageUrl      String
   dateFounded   String?
   averagePrice  String?
   rating        Float?
-  mapsUrl String?
+  mapsUrl       String?
+  favorites     Favorite[]
 }
+
 model User {
+  id            Int        @id @default(autoincrement())
+  email         String     @unique
+  password      String
+  firstName     String?
+  lastName      String?
+  phone         String?
+  birthDate     String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  searchHistory Json?
+  favorites     Favorite[]
+}
+
+model Favorite {
   id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String // Хешированный пароль
-  firstName String?
-  lastName  String?
-  phone     String?
-  birthDate String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  place     Place    @relation(fields: [placeId], references: [id])
+  placeId   Int
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  searchHistory Json? // Храним историю поиска как JSON
+
+  @@unique([userId, placeId])
 }
