@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getPlaces, Place } from '@/services/places';
+import { getPlacesByCityAndCategory, Place } from '@/services/places';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { city, category } = req.query;
@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const places = await getPlaces(city.toLowerCase(), category.toLowerCase());
+    const places = await getPlacesByCityAndCategory(city.toLowerCase(), category.toLowerCase());
     res.status(200).json(places);
   } catch (error) {
     console.error('Ошибка в API /places:', error);

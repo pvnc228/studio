@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getPlaces, Place } from "@/services/places";
+import { getPlacesByCityAndCategory, Place } from "@/services/places";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -59,21 +59,19 @@ export const CitySelection = ({ onPlacesUpdate }: CitySelectionProps) => {
   const handleCategoryChange = (cat: string) => {
     setCategory(cat);
   };
-
   const handleShowPlaces = async () => {
     if (!city || !category) {
       alert('Пожалуйста, выберите город и категорию.');
       return;
     }
-
+  
     setIsLoading(true);
     try {
       const response = await fetch(`/api/places?city=${city.toLowerCase()}&category=${category.toLowerCase()}`);
-      console.log('Отправка запроса с city:', city, 'и category:', category);
       if (!response.ok) {
         throw new Error('Не удалось получить данные');
       }
-      const places = await response.json();
+      const places: Place[] = await response.json();
       onPlacesUpdate(places);
     } catch (error) {
       console.error('Ошибка при получении мест:', error);

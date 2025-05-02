@@ -1,27 +1,26 @@
 'use server';
 import { ai } from '@/ai/ai-instance';
 import { z } from 'genkit';
-import { getPlaces, Place } from '@/services/places';
+import { getPlacesByCity } from '@/services/places';
 
 const SuggestPlaceFromDescriptionInputSchema = z.object({
   city: z.string().describe('The city to search for places in.'),
   description: z.string().describe('The description of the desired place.'),
-  category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
 });
 export type SuggestPlaceFromDescriptionInput = z.infer<typeof SuggestPlaceFromDescriptionInputSchema>;
 
 const SuggestPlaceFromDescriptionOutputSchema = z.array(
   z.object({
-    id: z.number().describe('The ID of the place.'),
-    name: z.string().describe('The name of the place.'),
-    category: z.string().describe('The category name of the place.'),
-    cityId: z.number().describe('The city ID of the place.'),
-    description: z.string().describe('A short description of the place.'),
-    imageUrl: z.string().describe('URL of an image for the place.'),
-    dateFounded: z.string().nullable().describe('The founding date of the place.'),
-    averagePrice: z.string().nullable().describe('The average price at the place.'),
-    rating: z.number().nullable().describe('The rating of the place.'),
-    mapsUrl: z.string().nullable().describe('Map URL of the place.'), // Заменяем googleMapsUrl на mapsUrl
+    id: z.number(),
+    name: z.string(),
+    category: z.string(),
+    cityId: z.number(),
+    description: z.string(),
+    imageUrl: z.string(),
+    dateFounded: z.string().nullable(),
+    averagePrice: z.string().nullable(),
+    rating: z.number().nullable(),
+    mapsUrl: z.string().nullable(),
   })
 ).describe('A list of suggested places.');
 
@@ -35,23 +34,20 @@ const prompt = ai.definePrompt({
   name: 'suggestPlaceFromDescriptionPrompt',
   input: {
     schema: z.object({
-      city: z.string().describe('The city to search for places in.'),
-      description: z.string().describe('The description of the desired place.'),
-      category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
+      city: z.string(),
+      description: z.string(),
       places: z.array(
         z.object({
-          id: z.number().describe('The ID of the place.'),
-          name: z.string().describe('The name of the place.'),
-          category: z.string().describe('The category name of the place.'),
-          cityId: z.number().describe('The city ID of the place.'),
-          description: z.string().describe('A short description of the place.'),
-          imageUrl: z.string().describe('URL of an image for the place.'),
-          dateFounded: z.string().nullable().describe('The founding date of the place.'),
-          averagePrice: z.string().nullable().describe('The average price at the place.'),
-          rating: z.number().nullable().describe('The rating of the place.'),
-          mapsUrl: z.string().nullable().describe('Map URL of the place.'), 
+          id: z.number(),
+          name: z.string(),
+          description: z.string(),
+          imageUrl: z.string(),
+          dateFounded: z.string().nullable(),
+          averagePrice: z.string().nullable(),
+          rating: z.number().nullable(),
+          mapsUrl: z.string().nullable(),
         })
-      ).describe('A list of places to consider.'),
+      ),
     }),
   },
   output: {
@@ -59,10 +55,9 @@ const prompt = ai.definePrompt({
   },
   prompt: `Ты - полезный AI-помощник, который предлагает места на основе описания пользователя.
 
-Пользователь ищет место в городе {{city}} со следующим описанием: {{description}}.
-Категория места - {{category}}.
+Пользователь ищет место в городе {{city}} со следующим описанием: "{{description}}".
 
-Вот список мест в этом городе и категории:
+Вот список мест в этом городе:
 
 {{#each places}}
 - Название: {{name}}, Описание: {{description}}, Средняя цена: {{averagePrice}}, Рейтинг: {{rating}}
@@ -82,7 +77,7 @@ const suggestPlaceFromDescriptionFlow = ai.defineFlow<
   inputSchema: SuggestPlaceFromDescriptionInputSchema,
   outputSchema: SuggestPlaceFromDescriptionOutputSchema,
 }, async (input) => {
-  const places = await getPlaces(input.city, input.category);
+  const places = await getPlacesByCity(input.city); // Теперь без категории
   const { output } = await prompt({ ...input, places });
   return output!;
 });

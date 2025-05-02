@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,10 @@ import {
 } from "@/components/ui/select";
 import { suggestPlaceFromDescription } from "@/ai/flows/suggest-place-from-description";
 import { Place } from "@/services/places";
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Функция для преобразования строки: первая буква заглавная, остальное без изменений
 const capitalize = (str: string) => {
-  if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
@@ -28,34 +26,24 @@ interface AISuggestionProps {
 }
 
 export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) => {
-  const [description, setDescription] = useState('');
-  const [city, setCity] = useState('');
-  const [category, setCategory] = useState('');
+  const [description, setDescription] = useState("");
+  const [city, setCity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cities, setCities] = useState<string[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       setDataLoading(true);
       try {
-        const citiesResponse = await fetch('/api/cities');
-        if (!citiesResponse.ok) throw new Error('Не удалось загрузить города');
+        const citiesResponse = await fetch("/api/cities");
+        if (!citiesResponse.ok) throw new Error("Не удалось загрузить города");
         const fetchedCities = await citiesResponse.json();
-
-        const categoriesResponse = await fetch('/api/categories');
-        if (!categoriesResponse.ok) throw new Error('Не удалось загрузить категории');
-        const fetchedCategories = await categoriesResponse.json();
-
-        // Преобразуем города и категории для отображения с большой буквы
         setCities(fetchedCities.map((city: string) => capitalize(city)));
-        setCategories(fetchedCategories.map((cat: string) => capitalize(cat)));
       } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
+        console.error("Ошибка при загрузке данных:", error);
         setCities([]);
-        setCategories([]);
       } finally {
         setDataLoading(false);
       }
@@ -65,18 +53,21 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
 
   const handleSuggestion = async () => {
     setError(null);
-    if (!city || !description || !category) {
-      setError('Пожалуйста, выберите город, введите описание и выберите категорию.');
+    if (!city || !description) {
+      setError("Пожалуйста, выберите город и введите описание.");
       return;
     }
 
     setIsLoading(true);
     try {
-      const places = await suggestPlaceFromDescription({ city: city.toLowerCase(), description, category: category.toLowerCase() });
+      const places = await suggestPlaceFromDescription({
+        city: city.toLowerCase(),
+        description,
+      });
       onPlacesUpdate(places);
     } catch (error) {
       console.error("Ошибка при предложении мест:", error);
-      setError('Не удалось получить предложения мест. Пожалуйста, попробуйте еще раз.');
+      setError("Не удалось получить предложения мест. Пожалуйста, попробуйте еще раз.");
       onPlacesUpdate([]);
     } finally {
       setIsLoading(false);
@@ -93,7 +84,9 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="ai-city" className="mb-2 block font-medium text-foreground">Город</Label>
+            <Label htmlFor="ai-city" className="mb-2 block font-medium text-foreground">
+              Город
+            </Label>
             {dataLoading ? (
               <Skeleton className="h-11 w-full" />
             ) : (
@@ -103,27 +96,12 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
                 </SelectTrigger>
                 <SelectContent>
                   {cities.map((ct) => (
-                    <SelectItem key={ct} value={ct.toLowerCase()} className="text-base">
-                      {ct} 
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-          <div>
-            <Label htmlFor="ai-category" className="mb-2 block font-medium text-foreground">Категория</Label>
-            {dataLoading ? (
-              <Skeleton className="h-11 w-full" />
-            ) : (
-              <Select onValueChange={setCategory} value={category}>
-                <SelectTrigger id="ai-category" className="h-11 text-base">
-                  <SelectValue placeholder="Выберите категорию" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat.toLowerCase()} className="text-base">
-                      {cat} 
+                    <SelectItem
+                      key={ct}
+                      value={ct.toLowerCase()}
+                      className="text-base"
+                    >
+                      {ct}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -133,7 +111,9 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
         </div>
 
         <div>
-          <Label htmlFor="ai-description" className="mb-2 block font-medium text-foreground">Описание</Label>
+          <Label htmlFor="ai-description" className="mb-2 block font-medium text-foreground">
+            Описание
+          </Label>
           <Input
             id="ai-description"
             placeholder="Например: Уютное кафе с видом на реку и веганскими опциями"
@@ -143,7 +123,9 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
           />
         </div>
 
-        {error && <p className="text-sm text-destructive font-medium">{error}</p>}
+        {error && (
+          <p className="text-sm text-destructive font-medium">{error}</p>
+        )}
 
         <Button
           onClick={handleSuggestion}
@@ -157,7 +139,7 @@ export const AISuggestion: React.FC<AISuggestionProps> = ({ onPlacesUpdate }) =>
               Подбираем...
             </>
           ) : (
-            'Предложить Места'
+            "Предложить Места"
           )}
         </Button>
       </CardContent>

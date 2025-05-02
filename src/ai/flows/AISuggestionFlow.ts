@@ -1,30 +1,21 @@
+// AISuggestionFlow.ts
 'use server';
 
-/**
- * @fileOverview An AI agent that suggests places based on a textual description.
- *
- * - suggestPlace - A function that handles the place suggestion process.
- * - SuggestPlaceInput - The input type for the suggestPlace function.
- * - SuggestPlaceOutput - The return type for the suggestPlace function.
- */
-
-import {ai} from '@/ai/ai-instance';
-import {z} from 'genkit';
+import { ai } from '@/ai/ai-instance';
+import { z } from 'genkit';
 
 const SuggestPlaceInputSchema = z.object({
   city: z.string().describe('The city to search for places in.'),
   description: z.string().describe('The description of the desired place.'),
-  category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
 });
 export type SuggestPlaceInput = z.infer<typeof SuggestPlaceInputSchema>;
 
 const SuggestPlaceOutputSchema = z.array(z.object({
   name: z.string().describe('The name of the place.'),
-  category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
+  category: z.string().describe('The category of the place.'),
   description: z.string().describe('A short description of the place.'),
   imageUrl: z.string().describe('URL of an image for the place'),
 })).describe('A list of suggested places.');
-
 
 export type SuggestPlaceOutput = z.infer<typeof SuggestPlaceOutputSchema>;
 
@@ -38,25 +29,18 @@ const prompt = ai.definePrompt({
     schema: z.object({
       city: z.string().describe('The city to search for places in.'),
       description: z.string().describe('The description of the desired place.'),
-      category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
     }),
   },
   output: {
-    schema: z.array(z.object({
-      name: z.string().describe('The name of the place.'),
-      category: z.string().describe('The category of the place (e.g., restaurant, cafe, hotel).'),
-      description: z.string().describe('A short description of the place.'),
-      imageUrl: z.string().describe('URL of an image for the place'),
-    })).describe('A list of suggested places.'),
+    schema: SuggestPlaceOutputSchema,
   },
   prompt: `You are a helpful AI assistant that suggests places based on a user's description.
 
-The user is looking for a place in {{city}} with the following description: {{description}}.
-The category of the place is {{category}}.
+The user is looking for a place in {{city}} with the following description: "{{description}}".
 
 Based on the user's description, suggest places that best match their needs.
 
-Return a JSON array of places that match the description.  Do not include any other text in your response.
+Return a JSON array of places that match the description. Do not include any other text in your response.
 `,
 });
 
@@ -68,8 +52,6 @@ const suggestPlaceFlow = ai.defineFlow<
   inputSchema: SuggestPlaceInputSchema,
   outputSchema: SuggestPlaceOutputSchema,
 }, async (input) => {
-  const {output} = await prompt(input);
+  const { output } = await prompt(input);
   return output!;
 });
-
-    
