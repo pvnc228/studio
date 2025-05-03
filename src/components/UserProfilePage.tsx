@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +23,8 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { StarRating } from "../components/RouteDisplay"; // Импортируйте ваш компонент рейтинга
+import { useUserReviews } from "@/hooks/useUserReviews"; // Новый хук
 
 const profileSchema = z.object({
     firstName: z.string().min(1, "Имя обязательно"),
@@ -56,6 +58,19 @@ export const UserProfilePage = () => {
     removeFavorite, 
     fetchFavorites 
   } = useFavorites(userId); 
+  const [expandedSections, setExpandedSections] = useState({
+    info: true,
+    history: true,
+    favorites: true,
+    reviews: true,
+  });
+  const { reviews, loading: loadingReviews, error: reviewsError } = useUserReviews(userId);
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   React.useEffect(() => {
     if (userProfile) {
@@ -115,12 +130,21 @@ export const UserProfilePage = () => {
           Выйти
         </Button>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Личная информация</CardTitle>
-          <CardDescription>Обновите свои персональные данные.</CardDescription>
-        </CardHeader>
+      <ScrollArea className="h-[80vh] rounded-md border">
+      <Card className="mb-4">
+      <CardHeader onClick={() => toggleSection("info")} className="cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <CardTitle>Личная информация</CardTitle>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    className={`w-6 h-6 transform transition-transform ${expandedSections.info ? '' : 'rotate-180'}`}
+                  >
+                    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+                  </svg>
+                </div>
+              </CardHeader>
+              {expandedSections.info && (
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -204,13 +228,21 @@ export const UserProfilePage = () => {
             </form>
           </Form>
         </CardContent>
+        )}
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="mb-4">
+      <CardHeader onClick={() => toggleSection("history")} className="cursor-pointer">
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>История поиска</CardTitle>
+              <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    className={`w-6 h-6 transform transition-transform ${expandedSections.history ? '' : 'rotate-180'}`}
+                  >
+                    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+                  </svg>
               <CardDescription>Места, которые вы недавно просматривали.</CardDescription>
             </div>
             {userProfile.searchHistory && userProfile.searchHistory.length > 0 && (
@@ -233,6 +265,7 @@ export const UserProfilePage = () => {
             )}
           </div>
         </CardHeader>
+        {expandedSections.history && (
         <CardContent>
           {userProfile.searchHistory && userProfile.searchHistory.length > 0 ? (
             <ScrollArea className="h-[300px] w-full rounded-md border p-4">
@@ -271,16 +304,25 @@ export const UserProfilePage = () => {
           )}
           
         </CardContent>
+        )}
       </Card>
-      <Card>
-        <CardHeader>
+      <Card className="mb-4">
+      <CardHeader onClick={() => toggleSection("favorites")} className="cursor-pointer">
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>Избранное</CardTitle>
+              <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    className={`w-6 h-6 transform transition-transform ${expandedSections.favorites ? '' : 'rotate-180'}`}
+                  >
+                    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+                  </svg>
               <CardDescription>Места, которые вы добавили в избранное.</CardDescription>
             </div>
           </div>
         </CardHeader>
+        {expandedSections.favorites && (
         <CardContent>
           {favorites.length > 0 ? (
             <ScrollArea className="h-[300px] w-full rounded-md border p-4">
@@ -338,7 +380,56 @@ export const UserProfilePage = () => {
             <p className="text-muted-foreground text-center py-4">Избранное пусто.</p>
           )}
         </CardContent>
+        )}
       </Card>
+      <Card className="mb-4">
+              <CardHeader onClick={() => toggleSection("reviews")} className="cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <CardTitle>Мои отзывы</CardTitle>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    className={`w-6 h-6 transform transition-transform ${expandedSections.reviews ? '' : 'rotate-180'}`}
+                  >
+                    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+                  </svg>
+                </div>
+              </CardHeader>
+              {expandedSections.reviews && (
+                <CardContent>
+                  {loadingReviews ? (
+                    <div>Загрузка...</div>
+                  ) : reviewsError ? (
+                    <div className="text-red-500">{reviewsError}</div>
+                  ) : reviews.length > 0 ? (
+                    <ScrollArea className="h-[300px]">
+                      <ul className="space-y-4">
+                        {reviews.map(review => (
+                          <li 
+                            key={review.id} 
+                            className="p-4 border rounded-md bg-gray-50"
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <strong>{review.placeName}</strong>
+                                <StarRating rating={review.rating} />
+                              </div>
+                              <p className="text-sm text-gray-500">
+                                {new Date(review.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <p className="text-gray-700">{review.text}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </ScrollArea>
+                  ) : (
+                    <div>Вы еще не оставляли отзывов.</div>
+                  )}
+                </CardContent>
+              )}
+            </Card>
+            </ScrollArea>
     </div>
   );
 };

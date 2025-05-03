@@ -168,3 +168,18 @@ body {
   transform: scale(1);
   opacity: 1;
 }
+/* В вашем CSS-файле */
+.card-header {
+  padding: 1rem;
+  background: #f8f9fa;
+  cursor: pointer;
+}
+
+.arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.review-card {
+  border-radius: 8px;
+  padding: 1rem;
+}

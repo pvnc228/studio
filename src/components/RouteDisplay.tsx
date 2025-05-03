@@ -9,7 +9,11 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { useCallback } from "react";
 import { useState, useEffect } from 'react';
 import Link from "next/link";
-
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { createReview, getReviewsByPlaceId } from "@/services/reviews";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 interface RouteDisplayProps {
   places: Place[];
 }
@@ -65,11 +69,65 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
   const userId = userProfile?.id;
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+  const [reviewError, setReviewError] = useState<string | null>(null);
   const {
     favorites,
     addFavorite,
     removeFavorite,
   } = useFavorites(userId);
+
+  const reviewSchema = z.object({
+    text: z.string().min(1, "Текст отзыва обязателен"),
+    rating: z.number().min(1, "Оценка от 1 до 5").max(5, "Оценка от 1 до 5").default(5),
+  });
+
+  const reviewForm = useForm<z.infer<typeof reviewSchema>>({
+    resolver: zodResolver(reviewSchema),
+    defaultValues: {
+      text: "",
+      rating: 5,
+    },
+  });
+
+   const handleReviewSubmit = async (data: typeof reviewSchema) => {
+    if (!userId || !selectedPlace) return;
+
+    const existingReview = reviews.find(r => r.userId === userId);
+if (existingReview) {
+  setReviewError("Вы уже оставляли отзыв на это место");
+  return;
+}
+    try {
+      await createReview(userId, selectedPlace.id, data);
+      // Обновляем список отзывов
+      const newReviews = await getReviewsByPlaceId(selectedPlace.id);
+      setReviews(newReviews);
+      reviewForm.reset();
+      setReviewError(null);
+    } catch (error) {
+      setReviewError("Ошибка при отправке отзыва");
+    }
+
+  };
+
+  // Получаем отзывы при открытии модала
+  useEffect(() => {
+    if (selectedPlace?.id) {
+      const fetchReviews = async () => {
+        try {
+          const fetchedReviews = await getReviewsByPlaceId(selectedPlace.id);
+          setReviews(fetchedReviews);
+        } catch (error) {
+          setReviewError("Не удалось загрузить отзывы");
+        } finally {
+          setIsLoadingReviews(false);
+        }
+      };
+      fetchReviews();
+    }
+  }, [selectedPlace]);
 
   const handleMapLinkClick = useCallback((place: Place) => {
     addToSearchHistory(place);
@@ -245,6 +303,67 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
                   </div>
                 </div>
               )}
+               <div className="mt-8">
+  <h3 className="text-2xl font-bold mb-4">Отзывы</h3>
+
+  {/* Форма для отзыва */}
+  {userProfile && (
+    <div className="p-4 border rounded-lg bg-gray-50 mb-4">
+      <form onSubmit={reviewForm.handleSubmit(handleReviewSubmit)}>
+        <div className="flex items-center mb-4">
+          <StarRating 
+            rating={reviewForm.watch("rating")}
+            className="mr-4"
+          />
+          <input 
+            type="range" 
+            min={1} 
+            max={5} 
+            step={1} 
+            value={reviewForm.watch("rating")}
+            onChange={(e) => 
+              reviewForm.setValue("rating", parseInt(e.target.value))
+            }
+            className="w-full"
+          />
+        </div>
+        <textarea 
+          {...reviewForm.register("text")} 
+          placeholder="Напишите ваш отзыв..."
+          className="w-full p-2 border rounded-md mb-4"
+        />
+        <Button type="submit" className="bg-primary text-white">
+          Отправить отзыв
+        </Button>
+      </form>
+    </div>
+  )}
+
+  {/* Список отзывов */}
+  {isLoadingReviews ? (
+    <div>Загрузка...</div>
+  ) : reviews.length > 0 ? (
+    reviews.map(review => (
+      <div 
+        key={review.id}
+        className="p-4 border rounded-md bg-gray-100 mb-2"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <strong>{review.user.firstName || "Аноним"}</strong>
+            <StarRating rating={review.rating} />
+          </div>
+          <p className="text-sm text-gray-500">
+            {new Date(review.createdAt).toLocaleDateString()}
+          </p>
+        </div>
+        <p className="mt-2 text-gray-700">{review.text}</p>
+      </div>
+    ))
+  ) : (
+    <p>Пока нет отзывов</p>
+  )}
+</div>
             </div>
           </div>
           </div>

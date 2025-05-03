@@ -34,6 +34,7 @@ model Place {
   favorites           Favorite[]
   category            Category   @relation(fields: [categoryId], references: [id])
   city                City       @relation(fields: [cityId], references: [id])
+  reviews             Review[]   // Добавьте это поле
 }
 
 model User {
@@ -48,6 +49,7 @@ model User {
   updatedAt     DateTime   @updatedAt
   searchHistory Json?
   favorites     Favorite[]
+  reviews       Review[]   // Добавьте это поле
 }
 
 model Favorite {
@@ -59,4 +61,16 @@ model Favorite {
   user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, placeId])
+}
+model Review {
+  id        Int     @id @default(autoincrement())
+  text      String
+  rating    Float
+  createdAt DateTime @default(now())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  place     Place   @relation(fields: [placeId], references: [id])
+  placeId   Int
+
+  @@unique([userId, placeId]) // Пользователь может оставить только один отзыв на место
 }
