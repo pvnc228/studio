@@ -11,12 +11,14 @@ export type Place = {
   category: string;
   cityId: number;
   description: string;
+  extendedDescription: string; // Добавлено
   imageUrl: string;
   dateFounded: string | null;
   averagePrice: string | null;
   rating: number | null;
   mapsUrl: string | null;
 };
+
 
 // Для обычного поиска (с категорией)
 export async function getPlacesByCityAndCategory(city: string, category: string): Promise<Place[]> {
@@ -72,4 +74,26 @@ export async function getPlacesByCity(city: string): Promise<Place[]> {
     rating: place.rating,
     mapsUrl: place.mapsUrl,
   }));
+}
+export async function getPlaceById(id: number): Promise<Place> {
+  const place = await prisma.place.findUnique({
+    where: { id },
+    include: { category: true, city: true }, // extendedDescription включен в модель
+  });
+
+  if (!place) throw new Error("Место не найдено");
+
+  return {
+    id: place.id,
+    name: place.name,
+    category: place.category.name,
+    cityId: place.cityId,
+    description: place.description,
+    extendedDescription: place.extendedDescription, // Добавлено
+    imageUrl: place.imageUrl,
+    dateFounded: place.dateFounded,
+    averagePrice: place.averagePrice,
+    rating: place.rating,
+    mapsUrl: place.mapsUrl,
+  };
 }

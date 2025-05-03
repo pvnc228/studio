@@ -136,3 +136,35 @@ body {
   opacity: 0;
   transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
 }
+.place-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.place-detail img {
+  border-radius: 12px;
+}
+
+.place-detail .rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.place-review {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.modal-content {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.modal-content.active {
+  transform: scale(1);
+  opacity: 1;
+}

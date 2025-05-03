@@ -269,7 +269,10 @@ export const UserProfilePage = () => {
           ) : (
             <p className="text-muted-foreground text-center py-4">История поиска пуста.</p>
           )}
-          <Card>
+          
+        </CardContent>
+      </Card>
+      <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
@@ -334,8 +337,6 @@ export const UserProfilePage = () => {
           ) : (
             <p className="text-muted-foreground text-center py-4">Избранное пусто.</p>
           )}
-        </CardContent>
-      </Card>
         </CardContent>
       </Card>
     </div>
