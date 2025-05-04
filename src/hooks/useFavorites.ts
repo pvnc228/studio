@@ -24,7 +24,7 @@ export function useFavorites(userId: number | undefined) {
       }
 
       const data = await res.json();
-
+      console.log('Fetched favorites:', data); // Отладочный вывод
       // Обработка данных с проверкой наличия связанных полей
       const places = data
         .filter((favorite: any) => 

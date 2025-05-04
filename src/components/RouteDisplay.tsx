@@ -172,7 +172,7 @@ if (existingReview) {
               }}
             >
                   {/* Кнопка избранного */}
-                  {place.id !== undefined && (
+                  {/* {place.id !== undefined && (
                 <button
                   onClick={() => toggleFavorite(place)}
                   aria-label={isFavorite(place.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
@@ -183,7 +183,7 @@ if (existingReview) {
                     <HeartOff className="text-gray-400 w-6 h-6" />
                   )}
                 </button>
-                  )}
+                  )} */}
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-3">
                     <img
                       src={place.imageUrl || 'https://picsum.photos/150/150'}
@@ -287,6 +287,7 @@ if (existingReview) {
                         href={selectedPlace.mapsUrl} 
                         target="_blank" 
                         rel="noopener noreferrer"
+                        onClick={() => handleMapLinkClick(selectedPlace)}
                       >
                         <Button 
                           variant="default" 
