@@ -13,12 +13,22 @@ export async function GET(req: Request) {
 
   const favorites = await prisma.favorite.findMany({
     where: { userId },
-    select: { place: true }, // Возвращаем только place
+    include: {
+      place: {
+        include: {
+          city: true,
+          category: true
+        }
+      }
+    },
     orderBy: { createdAt: 'desc' },
   });
 
-  // Извлекаем массив Place из favorites
-  const places = favorites.map(fav => fav.place);
+  const places = favorites.map(fav => ({
+    ...fav.place,
+    city: fav.place.city,
+    category: fav.place.category
+  }));
   return NextResponse.json(places); // Возвращаем массив Place
 }
 

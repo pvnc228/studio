@@ -6,31 +6,38 @@ export function useFavorites(userId: number | undefined) {
   const [favorites, setFavorites] = useState<Place[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { userProfile, token } = useUserProfile(); // Используем ваш реальный контекст
+  const { token } = useUserProfile();
 
-  // 1. Исправленный fetchFavorites с проверкой токена и зависимостями
   const fetchFavorites = useCallback(async () => {
     if (!userId || !token) return;
-  
+
     setLoading(true);
     setError(null);
-  
+
     try {
       const res = await fetch("/api/favorites", {
         headers: { Authorization: `Bearer ${token}` }
       });
-  
+
       if (!res.ok) {
         throw new Error("Ошибка загрузки избранного");
       }
-  
+
       const data = await res.json();
-  
-      // Фильтруем данные: оставляем только объекты с place и place.id
+
+      // Обработка данных с проверкой наличия связанных полей
       const places = data
-        .filter(favorite => favorite.place && favorite.place.id !== undefined)
-        .map(favorite => favorite.place);
-  
+        .filter((favorite: any) => 
+          favorite.place?.city && 
+          favorite.place?.category
+        )
+        .map((favorite: any) => ({
+          ...favorite.place,
+          city: favorite.place.city.name,
+          category: favorite.place.category.name,
+          cityId: favorite.place.cityId,
+        }));
+
       setFavorites(places);
     } catch (err: any) {
       console.error("Ошибка загрузки избранного:", err.message);
@@ -39,13 +46,12 @@ export function useFavorites(userId: number | undefined) {
     } finally {
       setLoading(false);
     }
-  }, [userId, token]); // Добавили зависимость от token
+  }, [userId, token]);
 
-  // 2. Исправленный addFavorite
   const addFavorite = useCallback(
     async (place: Place) => {
       if (!userId || !token) return;
-  
+
       try {
         const res = await fetch("/api/favorites", {
           method: "POST",
@@ -55,18 +61,18 @@ export function useFavorites(userId: number | undefined) {
           },
           body: JSON.stringify({ placeId: place.id }),
         });
-  
+
         if (res.status === 409) {
           const errorData = await res.json();
           setError(errorData.message || "Место уже в избранном");
           return;
         }
-  
+
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || "Ошибка добавления");
         }
-  
+
         await fetchFavorites();
       } catch (err: any) {
         console.error("Ошибка добавления в избранное:", err?.message);
@@ -75,17 +81,15 @@ export function useFavorites(userId: number | undefined) {
     },
     [userId, token, fetchFavorites]
   );
-  // 3. Исправленный removeFavorite (правильный URL)
+
   const removeFavorite = useCallback(
     async (placeId: string) => {
       if (!userId || !token) return;
 
       try {
-        const res = await fetch(`/api/favorites/${placeId}`, { // Исправленный URL
+        const res = await fetch(`/api/favorites/${placeId}`, {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}` // Добавили токен
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
 
         if (!res.ok) {
@@ -102,7 +106,6 @@ export function useFavorites(userId: number | undefined) {
     [userId, token, fetchFavorites]
   );
 
-  // 4. Исправленный useEffect
   useEffect(() => {
     if (userId && token) {
       fetchFavorites();

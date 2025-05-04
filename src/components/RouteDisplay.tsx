@@ -281,20 +281,19 @@ if (existingReview) {
                           <HeartOff className="text-gray-400 w-6 h-6" />
                         )}
                       </button>
-                      <Button 
-                        asChild 
-                        variant="default" 
-                        className="bg-primary text-white"
-                      >
-                        <a 
-                          href={selectedPlace.mapsUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                        >
-                          <MapPin className="h-5 w-5 mr-2" />
-                          Посмотреть на карте
-                        </a>
-                      </Button>
+                      {places.mapsUrl && (
+                    <Button 
+                    as={Link} 
+                    href={places.mapsUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    variant="default" 
+                    className="mt-3 inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-200 ease-in-out hover:scale-105 shadow-md hover:shadow-lg"
+                  >
+                    <MapPin className="h-5 w-5" />
+                    Посмотреть на карте
+                  </Button>
+                  )}
                     </div>
                     <div className="text-sm text-gray-500">
                       <p><strong>Дата основания:</strong> {selectedPlace.dateFounded}</p>

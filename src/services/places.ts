@@ -1,17 +1,15 @@
-// services/places.ts
 'use server';
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export type Place = {
   id: number;
   name: string;
   category: string;
+  city: string;
   cityId: number;
   description: string;
-  extendedDescription: string; // Добавлено
+  extendedDescription: string;
   imageUrl: string;
   dateFounded: string | null;
   averagePrice: string | null;
@@ -19,8 +17,24 @@ export type Place = {
   mapsUrl: string | null;
 };
 
+function mapPlace(place: any): Place {
+  return {
+    id: place.id,
+    name: place.name,
+    category: place.category?.name || 'Без категории',
+    city: place.city?.name || 'Неизвестный город',
+    cityId: place.cityId,
+    description: place.description,
+    extendedDescription: place.extendedDescription,
+    imageUrl: place.imageUrl,
+    dateFounded: place.dateFounded,
+    averagePrice: place.averagePrice,
+    rating: place.rating,
+    mapsUrl: place.mapsUrl,
+  };
+}
 
-// Для обычного поиска (с категорией)
+// Остальные функции остаются без изменений
 export async function getPlacesByCityAndCategory(city: string, category: string): Promise<Place[]> {
   try {
     const places = await prisma.place.findMany({
@@ -30,70 +44,36 @@ export async function getPlacesByCityAndCategory(city: string, category: string)
       },
       include: { category: true, city: true },
     });
-
-    return places.map((place) => ({
-      id: place.id,
-      name: place.name,
-      category: place.category.name,
-      cityId: place.cityId,
-      description: place.description,
-      imageUrl: place.imageUrl,
-      dateFounded: place.dateFounded,
-      averagePrice: place.averagePrice,
-      rating: place.rating,
-      mapsUrl: place.mapsUrl,
-    }));
+    return places.map(mapPlace);
   } catch (error) {
-    console.error('Ошибка при получении мест:', error);
-    throw new Error('Не удалось загрузить места');
-  } finally {
-    await prisma.$disconnect();
+    console.error('Error fetching places:', error);
+    throw new Error('Failed to fetch places');
   }
 }
 
-// Для AI подбора (без категории)
 export async function getPlacesByCity(city: string): Promise<Place[]> {
-  const places = await prisma.place.findMany({
-    where: {
-      city: {
-        name: { equals: city, mode: 'insensitive' },
-      },
-    },
-    include: { category: true, city: true },
-  });
-
-  return places.map((place) => ({
-    id: place.id,
-    name: place.name,
-    category: place.category.name,
-    cityId: place.cityId,
-    description: place.description,
-    imageUrl: place.imageUrl,
-    dateFounded: place.dateFounded,
-    averagePrice: place.averagePrice,
-    rating: place.rating,
-    mapsUrl: place.mapsUrl,
-  }));
+  try {
+    const places = await prisma.place.findMany({
+      where: { city: { name: { equals: city, mode: 'insensitive' } } },
+      include: { category: true, city: true },
+    });
+    return places.map(mapPlace);
+  } catch (error) {
+    console.error('Error fetching places:', error);
+    throw new Error('Failed to fetch places');
+  }
 }
+
 export async function getPlaceById(id: number): Promise<Place> {
-  const place = await prisma.place.findUnique({
-    where: { id },
-    include: { category: true, city: true }, // extendedDescription включен в модель
-  });
-
-  if (!place) throw new Error("Место не найдено");
-
-  return {
-    id: place.id,
-    name: place.name,
-    category: place.category.name,
-    cityId: place.cityId,
-    description: place.description,
-    extendedDescription: place.extendedDescription, // Добавлено
-    imageUrl: place.imageUrl,
-    dateFounded: place.dateFounded,
-    averagePrice: place.averagePrice,
-    rating: place.rating,
-    mapsUrl: place.mapsUrl,
-  };
+  try {
+    const place = await prisma.place.findUnique({
+      where: { id },
+      include: { category: true, city: true },
+    });
+    if (!place) throw new Error('Place not found');
+    return mapPlace(place);
+  } catch (error) {
+    console.error('Error fetching place:', error);
+    throw new Error('Failed to fetch place');
+  }
 }

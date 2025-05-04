@@ -55,9 +55,10 @@ export const UserProfilePage = () => {
   const userId = userProfile?.id;
   const { 
     favorites, 
-    removeFavorite, 
-    fetchFavorites 
-  } = useFavorites(userId); 
+    loading: favoritesLoading, 
+    error: favoritesError, 
+    removeFavorite 
+  } = useFavorites(userId);
   const [expandedSections, setExpandedSections] = useState({
     info: true,
     history: true,
@@ -324,7 +325,11 @@ export const UserProfilePage = () => {
         </CardHeader>
         {expandedSections.favorites && (
         <CardContent>
-          {favorites.length > 0 ? (
+          {favoritesLoading ? (
+          <div>Загрузка избранного...</div>
+        ) : favoritesError ? (
+          <div className="text-red-500">{favoritesError}</div>
+        ) : favorites.length > 0 ? (
             <ScrollArea className="h-[300px] w-full rounded-md border p-4">
               <ul className="space-y-4">
                 {favorites.map((place, index) => (
@@ -341,7 +346,11 @@ export const UserProfilePage = () => {
                         />
                         <div className="flex-grow min-w-0">
                           <p className="font-medium truncate text-foreground">{place.name}</p>
-                          <p className="text-xs text-muted-foreground capitalize truncate">{place.category}</p>
+                          <p className="text-xs text-muted-foreground capitalize truncate">
+                              {typeof place.category === 'string' 
+                                  ? place.category 
+                                  : place.category?.name}
+                            </p>
                         </div>
                       </div>
                       <div className="flex gap-2">
