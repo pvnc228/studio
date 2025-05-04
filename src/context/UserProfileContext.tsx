@@ -36,13 +36,31 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [isFirstLogin, setIsFirstLogin] = useState(false); // Инициализируем флаг
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-      fetchUserProfile(storedToken);
-    } else {
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        try {
+          const response = await fetch('/api/auth/me', {
+            headers: { Authorization: `Bearer ${storedToken}` },
+          });
+          
+          if (!response.ok) throw new Error('Недействительный токен');
+          
+          const userData = await response.json();
+          setUserProfile({
+            ...userData,
+            searchHistory: userData.searchHistory || [], // Гарантируем массив
+          });
+          setToken(storedToken);
+        } catch (error) {
+          console.error('Ошибка инициализации:', error);
+          localStorage.removeItem('token');
+        }
+      }
       setLoading(false);
-    }
+    };
+
+    initializeAuth();
   }, []);
 
   const fetchUserProfile = async (authToken: string) => {
@@ -50,15 +68,20 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
       const response = await fetch('/api/auth/me', {
         headers: { Authorization: `Bearer ${authToken}` },
       });
-      if (!response.ok) throw new Error('Не удалось загрузить профиль');
+      
+      if (!response.ok) throw new Error('Ошибка загрузки профиля');
+      
       const user = await response.json();
-      setUserProfile(user);
+      setUserProfile({
+        ...user,
+        searchHistory: Array.isArray(user.searchHistory) 
+          ? user.searchHistory 
+          : [], // Если не массив, вернуть пустой массив
+      });
+    
     } catch (error) {
-      console.error('Ошибка при загрузке профиля:', error);
-      setToken(null);
-      localStorage.removeItem('token');
-    } finally {
-      setLoading(false);
+      console.error('Ошибка:', error);
+      logout();
     }
   };
 
@@ -168,7 +191,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
 
 export const useUserProfile = () => {
   const context = useContext(UserProfileContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useUserProfile must be used within a UserProfileProvider');
   }
   return context;

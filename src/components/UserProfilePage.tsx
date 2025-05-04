@@ -88,8 +88,12 @@ export const UserProfilePage = () => {
   }, [userProfile, form, loading, router]);
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
+    const formattedData = {
+      ...data,
+      birthDate: data.birthDate || undefined, // Преобразуем пустую строку в null
+    };
     try {
-      await updateUserProfile(data);
+      await updateUserProfile(formattedData);
       toast({ title: "Успех", description: "Профиль успешно обновлён" });
     } catch (error: any) {
       toast({ title: "Ошибка", description: "Не удалось обновить профиль", variant: "destructive" });
@@ -271,7 +275,7 @@ export const UserProfilePage = () => {
           {userProfile.searchHistory && userProfile.searchHistory.length > 0 ? (
             <ScrollArea className="h-[300px] w-full rounded-md border p-4">
               <ul className="space-y-4">
-                {userProfile.searchHistory.map((place, index) => (
+                {(userProfile?.searchHistory || []).map((place, index) =>  (
                   <React.Fragment key={`${place.id}-${index}`}>
                     <li className="flex items-center justify-between gap-4 text-sm">
                       <div className="flex items-center gap-3 min-w-0">
@@ -332,7 +336,7 @@ export const UserProfilePage = () => {
         ) : favorites.length > 0 ? (
             <ScrollArea className="h-[300px] w-full rounded-md border p-4">
               <ul className="space-y-4">
-                {favorites.map((place, index) => (
+                {(favorites || []).map((place, index) => (
                   <React.Fragment key={place.id}>
                     <li className="flex items-center justify-between gap-4 text-sm">
                       <div className="flex items-center gap-3 min-w-0">
@@ -413,7 +417,7 @@ export const UserProfilePage = () => {
                   ) : reviews.length > 0 ? (
                     <ScrollArea className="h-[300px]">
                       <ul className="space-y-4">
-                        {reviews.map(review => (
+                        {(reviews || []).map(review => (
                           <li 
                             key={review.id} 
                             className="p-4 border rounded-md bg-gray-50"

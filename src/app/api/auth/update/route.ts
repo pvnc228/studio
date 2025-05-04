@@ -1,3 +1,4 @@
+//auth/update/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
@@ -25,8 +26,13 @@ export async function PUT(req: NextRequest) {
         birthDate,
       },
     });
+  
+    const formattedUser = {
+      ...updatedUser,
+      searchHistory: updatedUser.searchHistory ? JSON.parse(updatedUser.searchHistory) : [],
+    };
 
-    return NextResponse.json({ message: 'Профиль обновлён', user: updatedUser }, { status: 200 });
+    return NextResponse.json({ message: 'Профиль обновлён', user: formattedUser  }, { status: 200 });
   } catch (error) {
     console.error('Ошибка при обновлении профиля:', error);
     return NextResponse.json({ message: 'Ошибка сервера при обновлении профиля' }, { status: 500 });

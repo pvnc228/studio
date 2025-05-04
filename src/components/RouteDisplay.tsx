@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createReview, getReviewsByPlaceId } from "@/services/reviews";
+import { createReview, getReviewsByPlaceId, Review } from "@/services/reviews";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 interface RouteDisplayProps {
   places: Place[];
@@ -91,10 +91,10 @@ export const RouteDisplay: React.FC<RouteDisplayProps> = ({ places }) => {
     },
   });
 
-   const handleReviewSubmit = async (data: typeof reviewSchema) => {
+  const handleReviewSubmit = async (data: z.infer<typeof reviewSchema>) => {
     if (!userId || !selectedPlace) return;
 
-    const existingReview = reviews.find(r => r.userId === userId);
+    const existingReview = reviews.find(r => r.user.id === userId);
 if (existingReview) {
   setReviewError("Вы уже оставляли отзыв на это место");
   return;
@@ -281,19 +281,22 @@ if (existingReview) {
                           <HeartOff className="text-gray-400 w-6 h-6" />
                         )}
                       </button>
-                      {places.mapsUrl && (
-                    <Button 
-                    as={Link} 
-                    href={places.mapsUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    variant="default" 
-                    className="mt-3 inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-200 ease-in-out hover:scale-105 shadow-md hover:shadow-lg"
-                  >
-                    <MapPin className="h-5 w-5" />
-                    Посмотреть на карте
-                  </Button>
-                  )}
+                      
+                      {selectedPlace?.mapsUrl && (
+                        <Link 
+                        href={selectedPlace.mapsUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        <Button 
+                          variant="default" 
+                          className="mt-3 inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-200 ease-in-out hover:scale-105 shadow-md hover:shadow-lg"
+                            >
+                            <MapPin className="h-5 w-5" />
+                              Посмотреть на карте
+                        </Button>
+                        </Link>
+                          )}
                     </div>
                     <div className="text-sm text-gray-500">
                       <p><strong>Дата основания:</strong> {selectedPlace.dateFounded}</p>
@@ -312,7 +315,7 @@ if (existingReview) {
         <div className="flex items-center mb-4">
           <StarRating 
             rating={reviewForm.watch("rating")}
-            className="mr-4"
+            
           />
           <input 
             type="range" 
