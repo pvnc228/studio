@@ -34,7 +34,7 @@ model Place {
   favorites           Favorite[]
   category            Category   @relation(fields: [categoryId], references: [id])
   city                City       @relation(fields: [cityId], references: [id])
-  reviews             Review[]   // Добавьте это поле
+  reviews             Review[]   
 }
 
 model User {
@@ -49,7 +49,7 @@ model User {
   updatedAt     DateTime   @updatedAt
   searchHistory Json?
   favorites     Favorite[]
-  reviews       Review[]   // Добавьте это поле
+  reviews       Review[]   
 }
 
 model Favorite {
@@ -72,5 +72,5 @@ model Review {
   place     Place   @relation(fields: [placeId], references: [id])
   placeId   Int
 
-  @@unique([userId, placeId]) // Пользователь может оставить только один отзыв на место
+  @@unique([userId, placeId]) 
 }

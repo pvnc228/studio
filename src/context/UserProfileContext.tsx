@@ -24,7 +24,7 @@ interface UserProfileContextType {
   logout: () => void;
   loading: boolean;
   isFirstLogin: boolean; // Новый флаг
-  setIsFirstLogin: (value: boolean) => void; // Метод для управления флагом
+  setIsFirstLogin: (value: boolean) => void; 
 }
 
 const UserProfileContext = createContext<UserProfileContextType | undefined>(undefined);
@@ -33,7 +33,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isFirstLogin, setIsFirstLogin] = useState(false); // Инициализируем флаг
+  const [isFirstLogin, setIsFirstLogin] = useState(false); 
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -49,7 +49,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
           const userData = await response.json();
           setUserProfile({
             ...userData,
-            searchHistory: userData.searchHistory || [], // Гарантируем массив
+            searchHistory: userData.searchHistory || [], 
           });
           setToken(storedToken);
         } catch (error) {
@@ -76,7 +76,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
         ...user,
         searchHistory: Array.isArray(user.searchHistory) 
           ? user.searchHistory 
-          : [], // Если не массив, вернуть пустой массив
+          : [], 
       });
     
     } catch (error) {
@@ -97,7 +97,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
       setToken(data.token);
       localStorage.setItem('token', data.token);
       await fetchUserProfile(data.token);
-      setIsFirstLogin(true); // Устанавливаем флаг после успешного логина
+      setIsFirstLogin(true);
     } catch (error) {
       console.error('Ошибка при входе:', error);
       throw error;
@@ -108,7 +108,7 @@ export const UserProfileProvider: React.FC<{ children: ReactNode }> = ({ childre
     setUserProfile(null);
     setToken(null);
     localStorage.removeItem('token');
-    setIsFirstLogin(false); // Сбрасываем флаг при выходе
+    setIsFirstLogin(false); 
   };
 
   const updateUserProfile = async (profileData: Partial<UserProfile>) => {

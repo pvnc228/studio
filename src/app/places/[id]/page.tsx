@@ -3,16 +3,16 @@
 
 import { useEffect, useState } from "react";
 import { Place } from "@/services/places";
-import { getPlaceById } from "@/services/places"; // Создайте функцию
+import { getPlaceById } from "@/services/places"; 
 import { useFavorites } from "@/hooks/useFavorites";
 import { useUserProfile } from "@/context/UserProfileContext";
-import { StarRating } from "@/components/RouteDisplay"; // Импортируйте ваш компонент рейтинга
+import { StarRating } from "@/components/RouteDisplay"; 
 import { useParams } from "next/navigation";
 import { MapPin, Heart, HeartOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function PlaceDetail() {
-  const { id } = useParams(); // Используем useParams
+  const { id } = useParams(); 
   const placeId = parseInt(id as string);
   const { userProfile } = useUserProfile();
   const userId = userProfile?.id;

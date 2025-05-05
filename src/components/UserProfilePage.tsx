@@ -110,7 +110,7 @@ export const UserProfilePage = () => {
   const handleRemoveFavorite = async (placeId: string) => {
     try {
       await removeFavorite(placeId);
-      await refetch(); // Обновляем список избранных
+      await refetch(); 
       toast({ title: "Успех", description: "Место удалено из избранного" });
     } catch (error) {
       toast({ 
@@ -128,7 +128,7 @@ export const UserProfilePage = () => {
     }
     try {
       await addFavorite(place);
-      await refetch(); // Обновляем список избранных
+      await refetch(); 
       toast({ title: "Успех", description: "Место добавлено в избранное" });
     } catch (error) {
       toast({ 
@@ -307,16 +307,7 @@ export const UserProfilePage = () => {
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            {/* <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleAddFavorite(place)}
-                              disabled={favorites.some(fav => fav.id === place.id)}
-                              aria-label="Добавить в избранное"
-                            >
-                              <Heart className="h-3.5 w-3.5" />
-                              {favorites.some(fav => fav.id === place.id) ? 'В избранном' : 'Добавить'}
-                            </Button> */}
+                          
                             <Button variant="ghost" size="sm" asChild>
                               <a href={place.mapsUrl ?? undefined} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
                                 <MapPin className="h-3.5 w-3.5" />
@@ -337,82 +328,7 @@ export const UserProfilePage = () => {
           )}
         </Card>
 
-        {/* <Card className="mb-4"> 
-          <CardHeader onClick={() => toggleSection("favorites")} className="cursor-pointer">
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle>Избранное</CardTitle>
-                <CardDescription>Места, которые вы добавили в избранное.</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          {expandedSections.favorites && (
-            <CardContent>
-              {favoritesLoading ? (
-                <div>Загрузка избранного...</div>
-              ) : favoritesError ? (
-                <div className="text-red-500">{favoritesError}</div>
-              ) : favorites.length > 0 ? (
-                <ScrollArea className="h-[300px] w-full rounded-md border p-4">
-                  <ul className="space-y-4">
-                    {(favorites || []).map((place, index) => (
-                      <React.Fragment key={place.id}>
-                        <li className="flex items-center justify-between gap-4 text-sm">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <img
-                              src={place.imageUrl || 'https://picsum.photos/40/40'}
-                              alt={place.name}
-                              width={40}
-                              height={40}
-                              className="w-10 h-10 object-cover rounded-md flex-shrink-0"
-                              onError={(e) => (e.currentTarget.src = 'https://picsum.photos/40/40')}
-                            />
-                            <div className="flex-grow min-w-0">
-                              <p className="font-medium truncate text-foreground">{place.name}</p>
-                              <p className="text-xs text-muted-foreground capitalize truncate">
-                                {typeof place.category === 'string' 
-                                  ? place.category 
-                                  : place.category?.name}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              onClick={() => handleRemoveFavorite(place.id.toString())}
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                              Удалить
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              asChild
-                            >
-                              <a 
-                                href={place.mapsUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="text-primary hover:underline inline-flex items-center gap-1"
-                              >
-                                <MapPin className="h-3.5 w-3.5" />
-                                Карта
-                              </a>
-                            </Button>
-                          </div>
-                        </li>
-                        {index < favorites.length - 1 && <Separator />}
-                      </React.Fragment>
-                    ))}
-                  </ul>
-                </ScrollArea>
-              ) : (
-                <p className="text-muted-foreground text-center py-4">Избранное пусто.</p>
-              )}
-            </CardContent>
-          )}
-        </Card>*/}
+       
 
         <Card className="mb-4">
           <CardHeader onClick={() => toggleSection("reviews")} className="cursor-pointer">

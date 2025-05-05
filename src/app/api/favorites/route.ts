@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     city: fav.place.city,
     category: fav.place.category
   }));
-  return NextResponse.json(places); // Возвращаем массив Place
+  return NextResponse.json(places); 
 }
 
 export async function POST(req: Request) {
@@ -42,9 +42,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const placeId = parseInt(body.placeId, 10); // Убедитесь, что placeId — число
-
-    // Проверяем, существует ли уже избранное
+    const placeId = parseInt(body.placeId, 10); 
     const existingFavorite = await prisma.favorite.findFirst({
       where: { userId, placeId },
     });
@@ -56,14 +54,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // Создаем новую запись
     const favorite = await prisma.favorite.create({
       data: { userId, placeId },
     });
 
     return NextResponse.json(favorite, { status: 201 });
   } catch (err: any) {
-    if (err.code === "P2002") { // Prisma код ошибки для уникального ограничения
+    if (err.code === "P2002") { 
       return NextResponse.json(
         { message: "Уникальное ограничение нарушено" },
         { status: 409 }

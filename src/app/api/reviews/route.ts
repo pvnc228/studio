@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   }
 }
 
-// app/api/places/[id]/reviews/route.ts (получение отзывов)
+
 import { getReviewsByPlaceId } from "@/services/reviews";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {

@@ -101,7 +101,7 @@ if (existingReview) {
 }
     try {
       await createReview(userId, selectedPlace.id, data);
-      // Обновляем список отзывов
+
       const newReviews = await getReviewsByPlaceId(selectedPlace.id);
       setReviews(newReviews);
       reviewForm.reset();
@@ -112,7 +112,7 @@ if (existingReview) {
 
   };
 
-  // Получаем отзывы при открытии модала
+
   useEffect(() => {
     if (selectedPlace?.id) {
       const fetchReviews = async () => {
@@ -135,7 +135,7 @@ if (existingReview) {
 
   const isFavorite = useCallback(
     (id: number) => 
-      favorites.some(fav => fav?.id === id), // Используем опциональную цепочку
+      favorites.some(fav => fav?.id === id), 
     [favorites]
   );
 
@@ -171,19 +171,7 @@ if (existingReview) {
                 setIsModalOpen(true);
               }}
             >
-                  {/* Кнопка избранного */}
-                  {/* {place.id !== undefined && (
-                <button
-                  onClick={() => toggleFavorite(place)}
-                  aria-label={isFavorite(place.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
-                >
-                  {isFavorite(place.id) ? (
-                    <Heart className="text-red-500 w-6 h-6" />
-                  ) : (
-                    <HeartOff className="text-gray-400 w-6 h-6" />
-                  )}
-                </button>
-                  )} */}
+                  
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-3">
                     <img
                       src={place.imageUrl || 'https://picsum.photos/150/150'}
@@ -205,22 +193,7 @@ if (existingReview) {
                     </div>
                   </div>
                   <p className="mb-3 text-foreground leading-relaxed">{place.description}</p>
-                  {/* {place.dateFounded && <p className="text-sm text-muted-foreground mb-1"><strong>Дата основания:</strong> {place.dateFounded}</p>}
-                  {place.averagePrice && <p className="text-sm text-muted-foreground mb-1"><strong>Средний чек:</strong> {place.averagePrice}</p>} */}
-
-                  {/* {place.mapsUrl && (
-                    <Button 
-                    as={Link} 
-                    href={place.mapsUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    variant="default" 
-                    className="mt-3 inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-200 ease-in-out hover:scale-105 shadow-md hover:shadow-lg"
-                  >
-                    <MapPin className="h-5 w-5" />
-                    Посмотреть на карте
-                  </Button>
-                  )} */}
+                  
                 </li>
               
               ))}
@@ -266,21 +239,7 @@ if (existingReview) {
                     </div>
                     <p className="text-gray-700 mb-4">{selectedPlace.extendedDescription}</p>
                     <div className="flex items-center gap-4 mb-4">
-                      {/* <button 
-                        onClick={() => {
-                          if (!userId) return;
-                          const isFav = favorites.some(fav => fav.id === selectedPlace.id);
-                          isFav 
-                            ? removeFavorite(selectedPlace.id.toString()) 
-                            : addFavorite(selectedPlace);
-                        }}
-                      >
-                        {isFavorite(selectedPlace.id) ? (
-                          <Heart className="text-red-500 w-6 h-6" />
-                        ) : (
-                          <HeartOff className="text-gray-400 w-6 h-6" />
-                        )}
-                      </button> */}
+                     
                       
                       {selectedPlace?.mapsUrl && (
                         <Link 
@@ -342,7 +301,6 @@ if (existingReview) {
     </div>
   )}
 
-  {/* Список отзывов */}
   {isLoadingReviews ? (
     <div>Загрузка...</div>
   ) : reviews.length > 0 ? (

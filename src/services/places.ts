@@ -34,7 +34,6 @@ function mapPlace(place: any): Place {
   };
 }
 
-// Остальные функции остаются без изменений
 export async function getPlacesByCityAndCategory(city: string, category: string): Promise<Place[]> {
   try {
     const places = await prisma.place.findMany({

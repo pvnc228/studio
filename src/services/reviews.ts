@@ -29,7 +29,7 @@ export async function createReview(userId: number, placeId: number, data: { text
 export async function getReviewsByPlaceId(placeId: number) {
   return prisma.review.findMany({
     where: { placeId },
-    include: { user: true }, // Получаем имя пользователя
+    include: { user: true },
     orderBy: { createdAt: 'desc' },
   });
 }
