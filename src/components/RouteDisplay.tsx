@@ -266,7 +266,7 @@ if (existingReview) {
                     </div>
                     <p className="text-gray-700 mb-4">{selectedPlace.extendedDescription}</p>
                     <div className="flex items-center gap-4 mb-4">
-                      <button 
+                      {/* <button 
                         onClick={() => {
                           if (!userId) return;
                           const isFav = favorites.some(fav => fav.id === selectedPlace.id);
@@ -280,7 +280,7 @@ if (existingReview) {
                         ) : (
                           <HeartOff className="text-gray-400 w-6 h-6" />
                         )}
-                      </button>
+                      </button> */}
                       
                       {selectedPlace?.mapsUrl && (
                         <Link 

@@ -307,7 +307,7 @@ export const UserProfilePage = () => {
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <Button
+                            {/* <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleAddFavorite(place)}
@@ -316,7 +316,7 @@ export const UserProfilePage = () => {
                             >
                               <Heart className="h-3.5 w-3.5" />
                               {favorites.some(fav => fav.id === place.id) ? 'В избранном' : 'Добавить'}
-                            </Button>
+                            </Button> */}
                             <Button variant="ghost" size="sm" asChild>
                               <a href={place.mapsUrl ?? undefined} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
                                 <MapPin className="h-3.5 w-3.5" />
@@ -337,7 +337,7 @@ export const UserProfilePage = () => {
           )}
         </Card>
 
-        <Card className="mb-4">
+        {/* <Card className="mb-4"> 
           <CardHeader onClick={() => toggleSection("favorites")} className="cursor-pointer">
             <div className="flex justify-between items-center">
               <div>
@@ -412,7 +412,7 @@ export const UserProfilePage = () => {
               )}
             </CardContent>
           )}
-        </Card>
+        </Card>*/}
 
         <Card className="mb-4">
           <CardHeader onClick={() => toggleSection("reviews")} className="cursor-pointer">
